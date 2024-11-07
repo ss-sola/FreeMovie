@@ -1,0 +1,28 @@
+{
+  "extends": ["@vue/tsconfig/tsconfig.dom.json", "@tsconfig/node20/tsconfig.json"],
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*"
+  ],
+  "exclude": ["src/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "moduleResolution": "Bundler",
+    "types": ["node", "jsdom", "@types/hls.js"], // 合并了所有types
+    "lib": ["ESNext"],
+    "noEmit": true,
+    "module": "ESNext",
+    "declaration": true
+  },
+  "references": []
+}

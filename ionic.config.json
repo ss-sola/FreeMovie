@@ -1,0 +1,7 @@
+{
+  "name": "freemovie",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
