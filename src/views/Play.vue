@@ -1,14 +1,17 @@
 <template>
-    <IonPage class="full">
+    <IonPage>
         <Header></Header>
-        <ArtPlayer />
-        <Detail></Detail>
-        <SearchRes></SearchRes>
+        <IonContent>
+            <ArtPlayer />
+            <Detail></Detail>
+            <SearchRes></SearchRes>
+        </IonContent>
+
     </IonPage>
 </template>
 
 <script setup lang="ts">
-import { IonPage } from '@ionic/vue';
+import { IonPage, IonContent } from '@ionic/vue';
 import Header from '@/components/header/Header.vue';
 import ArtPlayer from '@/components/player/ArtPlayer.vue'
 import Detail from '@/components/movieDetail/Detail.vue'

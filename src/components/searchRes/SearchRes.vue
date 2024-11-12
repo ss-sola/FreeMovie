@@ -8,19 +8,17 @@
             <i class="iconfont icon-gengduo"></i>
         </span>
     </div>
-    <ion-content class="ion-padding">
-        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+
+    <!-- <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content pulling-text="Pull to refresh" refreshing-spinner="circles"
                 refreshing-text="Refreshing..."></ion-refresher-content>
-        </ion-refresher>
-        <div class="main" v-for="(activeData, index) in modelData" v-show="activeData.active" :key="index">
-            <Card v-slide-in v-for="(dataItem, aIndex) in activeData.datas" :data-item="dataItem" :key="aIndex"></Card>
-            <div class="empty" v-if="activeData.datas.length == 0">
-                <Empty></Empty>
-            </div>
+        </ion-refresher> -->
+    <div class="main" v-for="(activeData, index) in modelData" v-show="activeData.active" :key="index">
+        <Card v-slide-in v-for="(dataItem, aIndex) in activeData.datas" :data-item="dataItem" :key="aIndex"></Card>
+        <div class="empty" v-if="activeData.datas.length == 0">
+            <Empty></Empty>
         </div>
-
-    </ion-content>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -96,9 +94,7 @@ const modelData = searchResultStore.searchResult
     box-shadow: 1px 1px 1px rgb(0 0 0 / 1%), -4px -1px 6px #fff;
 }
 
-.main {
-    padding: 0;
-}
+
 
 .empty {
     position: absolute;

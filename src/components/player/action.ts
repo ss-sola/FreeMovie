@@ -101,8 +101,10 @@ const initWatch = (artplayer: Artplayer) => {
       if (newValue && artplayer) {
         doPlay().then(async (res) => {
           if (movieStore.url) {
-            const type = await getVideoType(movieStore.url)
-            console.log(type)
+            let type = movieStore.type
+            if (!type) {
+              type = await getVideoType(movieStore.url)
+            }
             artplayer.type = type
             artplayer.switchUrl(movieStore.url)
           }

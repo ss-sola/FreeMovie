@@ -57,4 +57,16 @@ declare namespace IEnvironment {
     safeWindow: Window & typeof globalThis
   }
   export type Toast = Promises<void>
+
+  export interface AndroidFullScreen {
+    isImmersiveModeSupported: boolean
+    isStickyImmersiveModeSupported: boolean
+    isStickyModeSupported: boolean
+    isImmersiveStickyModeSupported: boolean
+    immersiveMode: () => void
+    immersiveStickyMode: () => void
+    stickyMode: () => void
+    immersiveStickyModeWithDecorations: () => void
+    showSystemUI: () => void
+  }
 }

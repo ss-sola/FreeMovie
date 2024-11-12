@@ -1,6 +1,9 @@
 <template>
     <div class="history">
         <i @click="showHistory" class="iconfont icon-time"></i>
+
+        <i @click="GRouter.toMine()" class="iconfont icon-wode1"></i>
+
         <div class="history-contioner" v-show="historyShow">
             <div class="history-main">
                 <div class="history-header">
@@ -16,9 +19,7 @@
                 <div @click="clearHistory" class="history-clear">清空</div>
             </div>
         </div>
-        <i @click="GRouter.toMine()" class="iconfont icon-wode1"></i>
         <Mask v-show="historyShow" @click="hideHistory"></Mask>
-
     </div>
 </template>
 

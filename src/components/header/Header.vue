@@ -19,25 +19,25 @@ import { useSearchStore } from '@/stores/searchStore'
 <style scoped>
 .header-contioner {
   display: flex;
-  height: 55px;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 3px 5px 5px 5px;
   max-width: 100vw;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   position: sticky;
   top: 0;
   /* 固定在页面顶部 */
   z-index: 100;
+  /* 添加模糊效果 */
   background-color: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(10px);
-  /* 添加模糊效果 */
+
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 
 .search {
-  height: 100%;
+  height: 30px;
   display: flex;
   flex: auto;
   justify-content: center;

@@ -15,10 +15,6 @@ body {
   height: 100vh;
 }
 
-.ion-page {
-  display: block !important;
-  overflow: auto !important;
-}
 
 @media (max-width: 740px) {
   .main {

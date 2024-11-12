@@ -154,10 +154,10 @@ const play = async function (option) {
 // AES解密函数
 function aesDecrypt(ciphertext, key, iv) {
   return CryptoJS['AES']
-    ['decrypt'](ciphertext, key, {
-      iv: iv
-    })
-    ['toString'](CryptoJS['enc']['Utf8'])
+  ['decrypt'](ciphertext, key, {
+    iv: iv
+  })
+  ['toString'](CryptoJS['enc']['Utf8'])
 }
 
 function getElementTextWithoutChildren(element) {
@@ -176,6 +176,7 @@ function getElementTextWithoutChildren(element) {
   return textContent
 }
 module.exports = {
+  author: 'MetaSola',
   name: meta.name,
   version: 1.0,
   getDetailData: getDetailData,

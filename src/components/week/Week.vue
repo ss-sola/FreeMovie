@@ -1,13 +1,15 @@
 <template>
-  <div class="top">
-    <h2 class="top-left">追番周表</h2>
-    <div class="top-right">
-      <span :class="{ active: item.active }" @click="chooseWeek(index)" v-for="(item, index) in weekData">{{ item.week
-      }}</span>
+  <div class="week-contioner">
+    <div class="top">
+      <h2 class="top-left">追番周表</h2>
+      <div class="top-right">
+        <span :class="{ active: item.active }" @click="chooseWeek(index)" v-for="(item, index) in weekData">{{ item.week
+        }}</span>
+      </div>
     </div>
-  </div>
-  <div class="main" v-for="item in weekData" v-show="item.active">
-    <Card v-slide-in v-for="(dataItem, index) in item.dataList" :data-item="dataItem" :key="index"></Card>
+    <div class="main" v-for="item in weekData" v-show="item.active">
+      <Card v-slide-in v-for="(dataItem, index) in item.dataList" :data-item="dataItem" :key="index"></Card>
+    </div>
   </div>
 </template>
 
@@ -24,10 +26,15 @@ init()
 
 </script>
 <style scoped>
+.week-contioner {
+  max-width: 100vw;
+  overflow: hidden;
+}
+
 .top {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 10px 0 10px;
 }
 
 .top-left {

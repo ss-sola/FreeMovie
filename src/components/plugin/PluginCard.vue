@@ -8,20 +8,15 @@
             </ion-row>
 
             <ion-row>
-                <ion-col class="lowlight">版本号:{{ plugin.version }}</ion-col>
-                <ion-col class="lowlight">作者:{{ plugin.author }}</ion-col>
-                <ion-col>
-                    <!-- <ion-toggle :disabled="!plugin.enable" :checked="plugin.enable"
-                        @ionChange="enableChange(plugin, $event, 'rotation')">轮播</ion-toggle> -->
-                </ion-col>
+                <ion-col size="5" class="lowlight">版本号:{{ plugin.version }}</ion-col>
+                <ion-col size="5" class="lowlight">作者:{{ plugin.author }}</ion-col>
+
             </ion-row>
             <ion-row>
-                <ion-col @click="doUpdate(plugin)"><i class="iconfont icon-jianchagengxin"></i>更新</ion-col>
-                <ion-col @click="doRemove(plugin)"><i class="iconfont icon-changyonggoupiaorenshanchu"></i>删除</ion-col>
-                <ion-col>
-                    <!-- <ion-toggle :disabled="!plugin.enable" :checked="plugin.enable"
-                        @ionChange="enableChange(plugin, $event, 'week')">周表</ion-toggle> -->
-                </ion-col>
+                <ion-col size="5" @click="doUpdate(plugin)"><i class="iconfont icon-jianchagengxin"></i>更新</ion-col>
+                <ion-col size="5" @click="doRemove(plugin)"><i
+                        class="iconfont icon-changyonggoupiaorenshanchu"></i>删除</ion-col>
+
             </ion-row>
         </ion-grid>
     </ion-card>
@@ -73,7 +68,7 @@ async function enableChange(plugin: any, event: CustomEvent, key: string) {
 ion-row>ion-col {
     display: flex;
     align-items: flex-end;
-
+    white-space: nowrap;
     /* font-size: 12px;
     color: #999; */
 }

@@ -1,32 +1,35 @@
 <template>
     <IonPage>
-        <Bubble class="aur"></Bubble>
-        <div class="content">
-            <ion-item :detail="true">
-                <ion-label>
-                    <h3>基础设置</h3>
-                </ion-label>
-            </ion-item>
-            <ion-item @click="GRouter.toPluginManager()" :detail="true">
-                <ion-label>
-                    <h3>插件管理</h3>
-                </ion-label>
-            </ion-item>
-            <ion-item>
-                <ion-checkbox @ionChange="checkUp" v-model="check">
+        <IonContent>
+            <Bubble class="aur"></Bubble>
+            <div class="content">
+                <ion-item :detail="true">
                     <ion-label>
-                        <h3>开发者模式</h3>
+                        <h3>基础设置</h3>
                     </ion-label>
-                </ion-checkbox>
-            </ion-item>
+                </ion-item>
+                <ion-item @click="GRouter.toPluginManager()" :detail="true">
+                    <ion-label>
+                        <h3>插件管理</h3>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-checkbox @ionChange="checkUp" v-model="check">
+                        <ion-label>
+                            <h3>开发者模式</h3>
+                        </ion-label>
+                    </ion-checkbox>
+                </ion-item>
 
-        </div>
+            </div>
+        </IonContent>
+
     </IonPage>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { IonPage, IonItem, IonLabel, IonCheckbox } from '@ionic/vue';
+import { IonPage, IonItem, IonLabel, IonCheckbox, IonContent } from '@ionic/vue';
 import Aurora from '@/components/common/Aurora.vue';
 import Bubble from '@/components/common/Bubble.vue';
 import Loading from '@/components/common/Loading.vue';
@@ -56,7 +59,7 @@ function checkUp(value: any) {
     padding-top: 25px;
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
-    height: 300px;
+
     background: #fff;
     transform: translateY(-25px);
 }

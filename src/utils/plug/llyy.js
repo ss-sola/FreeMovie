@@ -1,29 +1,32 @@
 
+
 const meta = {
-    name: '量子888',
+    name: '琉璃影院',
     available: true,
-    priority: 100,
-    from: 'https://lzi888.com/'
+    priority: 10,
+    from: 'https://www.liuliyy.fun/'
 }
 
-const search = async function (title) {
+
+const search = async function (title, page) {
     const modelData = []
     title = title.replaceAll(" ", "")
-    var url = meta.from + "/index.php/vod/search/page/1/wd/" + title + ".html"
+    var url = meta.from + "/vodsearch/" + title + "----------" + page + "---.html"
     var res = await fetch(url)
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(await res.text(), "text/html");
-    const uls = doc.querySelectorAll(".module-card-item")
+    const uls = doc.querySelectorAll(".myui-vodlist>li")
     for (var i = 0; i < uls.length; i++) {
         var item = uls[i]
-        var code = item.querySelector('.module-card-item-poster').getAttribute('href').match(/\d+/g)[0]
-        var tag = item.querySelector('.module-item-note').textContent
-        var img = item.querySelector('img').getAttribute('data-original')
-        var title = item.querySelector('.module-card-item-title').textContent
+        const aTag = item.querySelector('a')
+        var code = aTag.getAttribute('href').match(/\d+/g)[0]
+        var tag = aTag.querySelector('.pic-text').textContent
+        var img = 'https://images.weserv.nl/?url=' + aTag.getAttribute('data-original')
+        var title = item.querySelector('.title').textContent
 
         const obj = {
-            platform: meta.from,
+            // platform: meta.from,
             title: title,
             img: img,
             id: code,
@@ -36,22 +39,23 @@ const search = async function (title) {
     }
 }
 async function getDetailData(item) {
-    const url = meta.from + `index.php/vod/detail/id/${item.id}.html`
+    const url = meta.from + `voddetail/${item.id}.html`
     let res = await fetch(url)
     if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
 
     const parser = new DOMParser()
     const doc = parser.parseFromString(await res.text(), 'text/html')
-    const detailData = doc.querySelector('.module-info-main')
-    const itemList = detailData.querySelectorAll('.module-info-item')
-    const lineHeader = doc.querySelectorAll('.module-tab-item')
-    const lineData = doc.querySelectorAll('.module-list')
+    const detailData = doc.querySelector('.myui-content__detail')
+    const itemList = detailData.querySelectorAll('.desc.clearfix>.data')
 
-    const region = detailData.querySelectorAll('.module-info-tag-link')[1].textContent
-    const desc = itemList[0].textContent
-    const director = itemList[1].textContent
-    const actor = itemList[2].textContent
-    const updateTime = itemList[3].textContent
+    const lineHeader = doc.querySelectorAll('.myui-panel__head>ul>li')
+    const lineData = doc.querySelector('.myui-panel_bd').querySelectorAll('ul')
+
+    const region = ""
+    const desc = doc.querySelector('.text-fff-5').textContent
+    const director = ""
+    const actor = ""
+    const updateTime = itemList[0].textContent
     const line = {}
 
     for (let i = 0; i < lineData.length; i++) {
@@ -59,7 +63,7 @@ async function getDetailData(item) {
         const itemHeader = lineHeader[i]
         const aEls = itemLine.querySelectorAll('a')
         const itemValue = {
-            html: itemHeader.getAttribute('data-dropdown-value'),
+            html: itemHeader.textContent,
             value: aEls.length > 0 ? aEls[0].textContent.split('-')[1] : '',
             total: []
         }
@@ -95,15 +99,16 @@ const play = async function (option) {
     if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
     const data = await res.text()
 
-    const cachePattern = /"url":"(.*?)","url_next"/g
+    const cachePattern = /},"url":"(.*?)","url_next"/g
 
 
     var resourseUrl = cachePattern.exec(data)[1].replaceAll('\\', '')
+
+
     return {
         url: resourseUrl
     }
 }
-
 
 module.exports = {
     author: 'MetaSola',

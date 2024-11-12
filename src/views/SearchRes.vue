@@ -1,12 +1,14 @@
 <template>
     <IonPage class="full">
-        <Header></Header>
-        <SearchRes></SearchRes>
+        <IonContent>
+            <Header></Header>
+            <SearchRes></SearchRes>
+        </IonContent>
     </IonPage>
 </template>
 
 <script setup lang="ts">
-import { IonPage } from '@ionic/vue';
+import { IonPage, IonContent } from '@ionic/vue';
 import Header from '@/components/header/Header.vue';
 import SearchRes from '@/components/searchRes/SearchRes.vue'
 

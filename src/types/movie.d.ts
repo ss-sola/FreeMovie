@@ -45,10 +45,14 @@ declare namespace IMovie {
     updateTime?: string
     /**线路 */
     line?: IMovie.ILineItem
+    /**扩展展示信息 */
+    labelMap?: {
+      [k: string]: string
+    }
   }
 
   /**视频播放类型 */
-  export type IMovieType = 'mp4' | 'm3u8' | 'flv'
+  export type IMovieType = 'mp4' | 'm3u8' | 'flv' | ''
 
   // 片源定义
   export interface IMovieSource extends IMovie.IMovieItem {

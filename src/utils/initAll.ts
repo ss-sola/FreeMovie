@@ -25,6 +25,8 @@ export const initAll = async () => {
   if (Capacitor.getPlatform() !== 'web') {
     const cappaFetch = fetch
     window.fetch = async (url, options = {}) => {
+      url = decodeURIComponent(url + '')
+      url = url.replace(/([^:])\/{2,}/g, '$1/')
       const response = await cappaFetch(
         location.origin + '/_capacitor_http_interceptor_?u=' + url,
         options

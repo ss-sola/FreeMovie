@@ -1,16 +1,15 @@
 <template>
     <IonPage>
         <IonHeader>
-            <ion-toolbar>
+            <IonToolbar>
                 <ion-title><span @click="GRouter.back()"><i class="iconfont icon-fanhui"></i>&nbsp;插件管理</span></ion-title>
-            </ion-toolbar>
+            </IonToolbar>
         </IonHeader>
         <IonContent>
             <PluginCard v-for="plugin in pluginModules" :key="plugin.name" :plugin="plugin"></PluginCard>
             <Fab></Fab>
             <Empty v-if="pluginModules.length == 0"></Empty>
         </IonContent>
-
     </IonPage>
 </template>
 
@@ -18,7 +17,7 @@
 import Empty from '@/components/common/Empty.vue';
 import PluginCard from '@/components/plugin/PluginCard.vue';
 import Fab from '@/components/plugin/fab/FabPlugin.vue';
-import { IonPage, IonHeader, IonContent, IonToolbar, IonTitle, IonIcon, IonFab, IonFabButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonContent, IonToolbar, IonTitle, IonFooter } from '@ionic/vue';
 import { add } from 'ionicons/icons';
 import GRouter from '@/router/routes'
 import { ref, reactive } from 'vue';

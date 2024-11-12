@@ -93,18 +93,38 @@ const init = function (container: HTMLDivElement) {
   artplayer.on('fullscreen', (state) => {
     if (state) {
       ScreenOrientation.lock({ orientation: 'landscape' })
-      StatusBar.hide()
+      hideNavigationBar()
     } else {
       ScreenOrientation.lock({ orientation: 'portrait' })
+      showNavigationBar()
     }
   })
 
   artplayer.on('error', (error, reconnectTime) => {
     movieStore.playStatus = IConfig.IPlayStatus.ErrorPlay
   })
+  // 监听 Artplayer 控制栏显示/隐藏状态
+  artplayer.on('control', (isControlsVisible) => {
+    //全屏模式下控制栏隐藏时隐藏状态栏
+    if (!isControlsVisible && artplayer?.fullscreen) {
+      hideNavigationBar()
+    }
+  })
 
   initWatch(artplayer)
   return artplayer
 }
+// 定义隐藏和显示导航栏的函数
 
+function hideNavigationBar() {
+  if (window.AndroidFullScreen) {
+    window.AndroidFullScreen.immersiveMode()
+  }
+}
+
+function showNavigationBar() {
+  if (window.AndroidFullScreen) {
+    window.AndroidFullScreen.showSystemUI()
+  }
+}
 export { init, artplayer }

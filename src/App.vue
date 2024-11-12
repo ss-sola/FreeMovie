@@ -1,10 +1,4 @@
 <template>
-  <!-- <router-view v-slot="{ Component }">
-    <keep-alive>
-      <component :is="Component" v-if="route.meta.keepAlive" :key="route.path" />
-    </keep-alive>
-    <component :is="Component" v-if="!route.meta.keepAlive" :keey="route.path" />
-  </router-view> -->
   <ion-app>
     <ion-router-outlet />
   </ion-app>
@@ -22,15 +16,6 @@ checkVersion()
 async function checkVersion() {
   try {
     const infoNew = await (await fetch(IConfig.InfoUrl)).json()
-    // const infoNew = {
-    //   version: '1.0.1',
-    //   name: 'FreeMovie',
-    //   description: 'FreeMovie',
-    //   author: 'FreeMovie',
-    //   url: 'https://blog.metasola.cn/freemovie/FreeMovie.apk',
-    //   license: 'MIT',
-    //   content: '1.0.0版本<br>1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布1.0.0版本发布发布'
-    // }
     const newVersion = infoNew.version
     const info = await App.getInfo()
     const activeVersion = info.version
