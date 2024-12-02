@@ -4,6 +4,18 @@ body {
   overflow-x: hidden;
 }
 
+ul {
+  margin: 0;
+  padding-left: 15px;
+}
+
+li {
+  word-break: break-all;
+  margin: 0;
+  padding: 5px 0 0 0;
+  font-size: small;
+}
+
 .main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(calc(100% / 7), 1fr));
@@ -15,6 +27,9 @@ body {
   height: 100vh;
 }
 
+.blod {
+  font-weight: bold;
+}
 
 @media (max-width: 740px) {
   .main {

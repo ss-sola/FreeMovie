@@ -49,7 +49,6 @@ const doPlay = async () => {
   Object.assign(options, movieStore)
 
   const playData = await pluginMap[movieStore.pluginId].play(options)
-  console.log(playData)
   // if (playData.m3u8Content) {
   //   //将该内容作为本地链接的文件内容,文件类型设置为m3u8文件
   //   const url = window.URL.createObjectURL(new Blob([playData.m3u8Content]))
@@ -57,6 +56,7 @@ const doPlay = async () => {
   // } else {
   //   movieStore.url = playData.url
   // }
+  movieStore.playStatus = IConfig.IPlayStatus.Waiting
   movieStore.url = playData.url
   return playData
 }

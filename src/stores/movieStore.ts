@@ -22,6 +22,20 @@ export const useMovieStore = defineStore('movieStore', () => {
   const movieHash = computed(() => {
     return `${movieStore.platform}_${movieStore.id}_${movieStore.activeLine}_${movieStore.activeNumber}`
   })
+
+  const descShowPos = computed(() => {
+    let num = 0
+    if (movieStore.region) num++
+    if (movieStore.director) num++
+    if (movieStore.actor) num++
+    if (movieStore.updateTime) num++
+    if (movieStore.labelMap) {
+      let labels = Object.keys(movieStore.labelMap)
+      if (labels.length > 0) num += labels.length
+    }
+    console.log(num)
+    return num >= 2
+  })
   function clearMovieStore() {
     movieStore.url = ''
     movieStore.platform = ''
@@ -38,6 +52,7 @@ export const useMovieStore = defineStore('movieStore', () => {
     movieStore,
     movieHash,
     movieHashLine,
-    movieHashTotal
+    movieHashTotal,
+    descShowPos
   }
 })

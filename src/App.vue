@@ -19,6 +19,9 @@ async function checkVersion() {
     const newVersion = infoNew.version
     const info = await App.getInfo()
     const activeVersion = info.version
+    if (!Array.isArray(infoNew.content)) {
+      infoNew.content = []
+    }
     if (activeVersion !== newVersion) {
       const fVersion = localStorage.getItem("freemovie_version")
       if (fVersion == newVersion) return

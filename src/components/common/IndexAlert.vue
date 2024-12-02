@@ -1,11 +1,16 @@
 <template>
     <ion-content class="ion-padding">
-        <div class="content">
-            <h2>新发布版本:{{ infoNew.version }}</h2>
-            <p>下载地址:</p>
+        <div class="info">
+            <h2 class="blod">新发布版本:{{ infoNew.version }}</h2>
+
+            <p class="blod" v-if="infoNew.content.length > 0">更新简介:</p>
+            <div>
+                <ul>
+                    <li v-for="item in infoNew.content" v-html="item"></li>
+                </ul>
+            </div>
+            <p class="blod">下载地址:</p>
             <p>{{ infoNew.url }}</p>
-            <p v-if="infoNew.content">更新简介:</p>
-            <div v-html="infoNew.content"></div>
         </div>
 
         <div class="btn">
@@ -30,6 +35,7 @@ const info = defineProps({
 const isConfirmed = ref(false);
 
 const confirm = async () => {
+    localStorage.setItem(IConfig.IVersionName, info.infoNew.version);
     const { type, value } = await Clipboard.read();
     if (value != info.infoNew.version) {
         await Clipboard.write({
@@ -41,7 +47,6 @@ const confirm = async () => {
 };
 
 const cancel = () => {
-    localStorage.setItem(IConfig.IVersionName, info.infoNew.version);
     isConfirmed.value = false;
     dismiss();
 };
@@ -52,16 +57,16 @@ const dismiss = async () => {
 </script>
 
 <style scoped>
-p {
-    word-break: break-all;
-    margin: 0;
-    padding: 5px 0;
-}
-
-.content {
+.info {
     max-height: 35vh;
     overflow: auto;
 }
+
+h2 {
+    margin: 0;
+}
+
+
 
 .btn {
     /* direction: rtl; */
