@@ -61,11 +61,20 @@ img {
 .region,
 .director,
 .actor,
-.updateTime,
-.desc {
+.updateTime {
     font-size: 14px;
     font-weight: 400;
     color: #6c757d;
+    display: -webkit-box;
+    /* 设置为WebKit内核的弹性盒子模型 */
+    -webkit-box-orient: vertical;
+    /* 垂直排列 */
+    -webkit-line-clamp: 2;
+    /* 限制显示两行 */
+    overflow: hidden;
+    /* 隐藏超出范围的内容 */
+    text-overflow: ellipsis;
+    /* 使用省略号 */
 }
 
 p {
@@ -73,6 +82,9 @@ p {
 }
 
 .desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6c757d;
     text-indent: 2em;
 }
 
@@ -80,5 +92,4 @@ p {
 .left {
     width: 25vw;
     min-width: 25vw;
-}
-</style>
+}</style>
