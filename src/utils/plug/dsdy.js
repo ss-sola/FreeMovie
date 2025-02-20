@@ -1,18 +1,23 @@
 const CryptoJS = require('CryptoJS')
-const Http = require('http')
+const analysis = require('analysis')
 
 const meta = {
     name: '毒蛇电影',
     available: true,
     priority: 10,
-    from: 'https://www.dushe03.com/',
-    imgUrl: 'https://vres.jxlfl.cn'
+    from: 'https://www.dushe03.com',
+    imgUrl: 'https://vres.wbadl.cn'
+}
+const headers = {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.1724.58'
 }
 const search = async function (title, page) {
     title = title.replaceAll(' ', '')
-    const url = meta.from + 'search?k=' + title + '&page=' + page
+    const url = meta.from + '/search?k=' + title + '&page=' + page
     const modelData = []
-    var res = await fetch(url)
+    var res = await fetch(url, {
+        headers: headers
+    })
     if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
     const parser = new DOMParser()
     const doc = parser.parseFromString(await res.text(), 'text/html')
@@ -26,10 +31,13 @@ const search = async function (title, page) {
         var img = item.querySelectorAll('img')[1].getAttribute('data-original')
         var title = item.querySelectorAll('.title')[1].textContent
 
+        if (!img.startsWith('http')) {
+            img = meta.imgUrl + img
+        }
         const obj = {
             platform: meta.from,
             title: title,
-            img: meta.imgUrl + img,
+            img: img,
             id: code,
             tag: tag
         }
@@ -42,7 +50,7 @@ const search = async function (title, page) {
 }
 
 async function getDetailData(item) {
-    const url = meta.from + 'detail/' + item.id + '.html'
+    const url = meta.from + '/detail/' + item.id + '.html'
     let res = await fetch(url)
     if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
 
@@ -66,10 +74,10 @@ async function getDetailData(item) {
     for (let i = 0; i < lineData.length; i++) {
         const itemLine = lineData[i]
         const itemHeader = lineHeader[i]
-        const itemHeaderSource = itemHeader.querySelectorAll('.source-item-label')[1]
+        const itemHeaderSource = itemHeader.querySelector('.source-item-label')
         const aEls = itemLine.querySelectorAll('a')
 
-        if (itemHeaderSource.textContent.includes('4K')) continue
+        // if (itemHeaderSource.textContent.includes('4K')) continue
 
         const itemValue = {
             html: itemHeaderSource.textContent,
@@ -97,30 +105,26 @@ async function getDetailData(item) {
     return item
 }
 
-const play = async function (option) {
-
-    let url = ''
-    const total = option.line[option.activeLine].total
-    for (let i = 0; i < total.length; i++) {
-        if (total[i].html == option.activeNumber) {
-            url = total[i].href
-        }
-    }
-
-    const res = await fetch(meta.from + url)
-    if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
-    const data = await res.text()
-
-    const cachePattern = /whatTMDwhatTMDPPPP = '(.*?)'/g
-
-
-    var resourseUrl = cachePattern.exec(data)[1].replaceAll('\\', '')
-
-
-
+const play = async function (url, option) {
+    const res = await analysis({ url: meta.from + url })
     return {
-        url: decrypt(resourseUrl)
+        url: res.videoUrl
     }
+
+    // const res = await fetch(meta.from + url)
+    // if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
+    // const data = await res.text()
+
+    // const cachePattern = /whatTMDwhatTMDPPPP = '(.*?)'/g
+
+
+    // var resourseUrl = cachePattern.exec(data)[1].replaceAll('\\', '')
+
+
+
+    // return {
+    //     url: decrypt(resourseUrl)
+    // }
 
 
 
@@ -146,6 +150,7 @@ function decrypt(encryptStr) {
 module.exports = {
     author: 'MetaSola',
     name: meta.name,
+    from: meta.from,
     version: 1.0,
     getDetailData: getDetailData,
     search: search,

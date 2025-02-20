@@ -1,6 +1,6 @@
 import { popoverController } from '@ionic/vue'
 import Confirm from '@/components/common/Confirm.vue'
-import { deletePlugin } from '@/service/plugin'
+import { deletePlugin, updatePlugin } from '@/service/plugin'
 async function doRemove(plugin: IPlugin.IPluginModule) {
   const popover = await popoverController.create({
     component: Confirm,
@@ -20,6 +20,18 @@ async function doRemove(plugin: IPlugin.IPluginModule) {
 }
 async function doUpdate(plugin: IPlugin.IPluginModule) {
   console.log(plugin)
+  const url = plugin.srcUrl
+  if (!url) {
+    Toast('插件更新地址为空')
+    return
+  }
+  const res = await fetch(url)
+  if (!res || !res.ok) {
+    Toast('更新失败')
+    throw new Error('fetch error')
+  }
+  const content = await res.text()
+  await updatePlugin(plugin.id, content)
 }
 
 export { doRemove, doUpdate }

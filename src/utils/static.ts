@@ -1,8 +1,8 @@
 let isPC = () => {
-  var userAgentInfo = navigator.userAgent
-  var Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']
-  var flag = true
-  for (var v = 0; v < Agents.length; v++) {
+  const userAgentInfo = navigator.userAgent
+  const Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']
+  let flag = true
+  for (let v = 0; v < Agents.length; v++) {
     if (userAgentInfo.indexOf(Agents[v]) > 0) {
       flag = false
       break
@@ -12,7 +12,7 @@ let isPC = () => {
   return flag
 }
 
-let emptyElement = () => {
+const emptyElement = () => {
   return document.createElement('div')
 }
 function sleep(seconds: number) {
@@ -20,11 +20,14 @@ function sleep(seconds: number) {
 }
 
 function checkPluginMoudle(pluginMoudle: IPlugin.IPluginModule) {
-  const keys: IPlugin.pluginMoudleKey[] = ['name', 'getDetailData', 'play']
-  for (let key of keys) {
+  const keys: IPlugin.pluginMoudleKey[] = ['name', 'getDetailData']
+  for (const key of keys) {
     if (!pluginMoudle[key]) {
       throw new Error(`${key} is required`)
     }
+  }
+  if (!pluginMoudle['play'] && !pluginMoudle['from']) {
+    throw new Error('play or from is required')
   }
 }
 
@@ -38,11 +41,16 @@ function safeRunContext() {
     XMLHttpRequest: true,
     FormData: true,
     DOMParser: true,
+    Promise: true,
+    String: true,
+    Array: true,
+    unescape: true,
     decodeURI: true,
     decodeURIComponent: true,
     encodeURI: true,
     encodeURIComponent: true,
-    URL: true
+    URL: true,
+    Blob: true,
   }
   const handler: ProxyHandler<Window & typeof globalThis> = {
     get(target: Window & typeof globalThis, prop: PropertyKey): any {
@@ -70,4 +78,12 @@ async function safeRunScript(content: string, fnOption: any) {
   }
 }
 
-export { isPC, emptyElement, sleep, safeRunContext, safeRunScript, checkPluginMoudle }
+function isValidURL(url: string) {
+  try {
+    new URL(url)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+export { isPC, emptyElement, sleep, safeRunContext, safeRunScript, checkPluginMoudle, isValidURL }

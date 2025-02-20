@@ -14,9 +14,6 @@ const playProcess = async () => {
   const objOption = {} as IMovie.IMovieSource
   Object.assign(objOption, movieStore)
 
-  // history.playHistory = history.playHistory.filter(
-  //   (item) => item.platform != objOption.platform || item.title != objOption.title
-  // )
   history.playHistory.unshift(objOption)
   console.log('history.playHistory', history.playHistory)
   //只取15个
@@ -42,7 +39,7 @@ const getVideoType = async (url: string) => {
     for (const type of m3u8Types) {
       if (contentType.includes(type)) return 'm3u8'
     }
-  } catch (error) {}
+  } catch (error) { }
 
   return ''
 }

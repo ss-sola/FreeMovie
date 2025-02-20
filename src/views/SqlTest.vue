@@ -6,39 +6,38 @@
     <div @click="getAllEndblePlugins">查询</div>
     <div @click="closeConnection(IConfig.Database)">断开</div>
     <div @click="test">测试</div>
-
   </IonPage>
 </template>
 
 <script setup lang="ts">
-import { IonPage } from '@ionic/vue';
-import { CapacitorSQLite } from '@capacitor-community/sqlite';
+import { IonPage } from '@ionic/vue'
+import { CapacitorSQLite } from '@capacitor-community/sqlite'
 import { registPlugin } from '@/service/plugin'
 import { getAllEndblePlugins, removePlugin, removeAllPlugins } from '@/sqlit/plugin'
 import { createConnection, closeConnection } from '@/sqlit/commen'
-import { IConfig } from '@/utils/config';
-
+import { IConfig } from '@/utils/config'
 async function connection() {
-  console.log("连接中")
+  console.log('连接中')
   await CapacitorSQLite.createConnection({
     database: 'test',
     version: 1,
-    encrypted: false,
+    encrypted: false
   })
   await CapacitorSQLite.open({ database: 'test' })
-  console.log("连接成功")
+  console.log('连接成功')
 }
 async function createTable() {
-  console.log("创建中")
+  console.log('创建中')
   await CapacitorSQLite.run({
     database: 'test',
-    statement: 'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)',
+    statement:
+      'CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)',
     values: []
   })
-  console.log("创建成功")
+  console.log('创建成功')
 }
 async function insertData() {
-  console.log("插入中")
+  console.log('插入中')
   await removeAllPlugins()
   // await CapacitorSQLite.run({
   //   database: 'test',
@@ -187,33 +186,32 @@ module.exports = {
 
 
 `
-  await registPlugin(str);
-  console.log("插入成功")
+  await registPlugin(str)
+  console.log('插入成功')
 }
 async function queryData() {
-  console.log("查询中")
+  console.log('查询中')
   const res = await CapacitorSQLite.query({
     database: 'test',
     statement: 'SELECT * FROM user',
     values: []
   })
-  console.log("查询成功", res.values)
+  console.log('查询成功', res.values)
 }
 
 async function desConnection() {
-  console.log("断开中")
+  console.log('断开中')
   if ((await CapacitorSQLite.isDBOpen({ database: 'test' })).result) {
     await CapacitorSQLite.close({ database: 'test' })
   }
 
   await CapacitorSQLite.closeConnection({ database: 'test' })
-  console.log("断开成功")
+  console.log('断开成功')
 }
 
 async function test() {
   console.log(await CapacitorSQLite.isDBExists({ database: 'test' }))
 }
-
 </script>
 
 <style scoped>

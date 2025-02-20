@@ -1,5 +1,6 @@
 import { CapacitorHttp } from '@capacitor/core'
 import { safeRunContext } from '@/utils/static'
+import { analysis } from '@/plugin/webView'
 import CryptoJS from 'crypto-js'
 
 export const IConfig = {
@@ -15,7 +16,9 @@ export const IConfig = {
   /**插件可使用模块 */
   pluginModules: {
     http: CapacitorHttp,
-    CryptoJS: CryptoJS
+    CryptoJS: CryptoJS,
+    analysis: analysis,
+    proxyImg: proxyImg
   },
   /**初始化表名称 */
   TableName: {
@@ -33,4 +36,28 @@ export const IConfig = {
     ErrorPlay: '播放失败'
   },
   safeWindow: safeRunContext()
+}
+
+
+async function proxyImg(url: string) {
+  return new Promise(async (resolve, reject) => {
+
+    const response = await CapacitorHttp.get({
+      url: url,
+      headers: {
+        Referer: url,
+      },
+      responseType: 'arraybuffer',
+      disableRedirects: false // 确保跟随重定向
+    })
+    // 检查状态码
+    if (response.status === 301 || response.status === 302) {
+      const newUrl = response.headers['Location'];
+      if (newUrl) {
+        resolve(await proxyImg(newUrl)); // 递归调用，请求新URL
+      }
+    }
+    const arrayBuffer = response.data;
+    resolve(`data:image/jpeg;base64,${arrayBuffer}`)
+  })
 }

@@ -38,7 +38,7 @@ const router = createRouter({
     },
     {
       path: '/sqtest',
-      name: 'test',
+      name: 'sqtest',
       component: () => import('@/views/SqlTest.vue')
     }
   ]

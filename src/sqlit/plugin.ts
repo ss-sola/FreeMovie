@@ -53,17 +53,18 @@ const removeAllPlugins = async () => {
     values: []
   })
 }
-const updatatePlugin = async (newPlugin: IDatabase.plugin) => {
+const doUpdatatePlugin = async (newPlugin: IDatabase.plugin) => {
   let plugin = await getPlugin(newPlugin.id)
   if (!plugin) return
   plugin = {
     ...plugin,
     ...newPlugin
   }
+  console.log(plugin)
   await CapacitorSQLite.run({
-    database: IConfig.TableName.Plugin,
-    statement: `UPDATE ${IConfig.TableName.Plugin} SET name = ?, version = ?, content = ?, url = ?, enable = ? WHERE id = ?`,
-    values: [plugin.name, plugin.version, plugin.content, plugin.url, plugin.enable, plugin.id]
+    database: IConfig.Database,
+    statement: `UPDATE ${IConfig.TableName.Plugin} SET name = ?, version = ?, content = ?, url = ? WHERE id = ?`,
+    values: [plugin.name, plugin.version, plugin.content, plugin.url, plugin.id]
   })
 }
 const getPlugin = async (pluginId: string) => {
@@ -80,10 +81,14 @@ const getPlugin = async (pluginId: string) => {
 
 const doPluginHook = async (func: Function, ...args: any[]) => {
   try {
-    return await func(...args)
-  } catch (error) {
     await createConnection(IConfig.Database, IConfig.DatabaseVersion)
-    return await func(...args)
+    await func(...args)
+    await closeConnection(IConfig.Database)
+    return
+  } catch (error) {
+    await func(...args)
+    await closeConnection(IConfig.Database)
+    return
   }
 }
 
@@ -94,7 +99,7 @@ export {
   addPlugin,
   removePlugin,
   removeAllPlugins,
-  updatatePlugin,
+  doUpdatatePlugin,
   getPlugin,
   doPluginHook
 }

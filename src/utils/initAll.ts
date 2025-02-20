@@ -22,18 +22,8 @@ export const initAll = async () => {
   console.time('initAll')
   window.IConfig = IConfig
   window.Toast = Toast
-  if (Capacitor.getPlatform() !== 'web') {
-    const cappaFetch = fetch
-    window.fetch = async (url, options = {}) => {
-      url = decodeURIComponent(url + '')
-      url = url.replace(/([^:])\/{2,}/g, '$1/')
-      const response = await cappaFetch(
-        location.origin + '/_capacitor_http_interceptor_?u=' + url,
-        options
-      )
-      return response
-    }
-  }
+  initVolumeControl()
+  initFetch()
   //初始化连接
   await createConnection(IConfig.Database, IConfig.DatabaseVersion)
   //初始化必要的表
@@ -44,4 +34,61 @@ export const initAll = async () => {
   closeConnection(IConfig.Database)
 
   console.timeEnd('initAll')
+}
+
+function initFetch() {
+  if (Capacitor.getPlatform() === 'web') return
+  const cappaFetch = fetch
+  window.fetch = async (url, options = {}, timeout = 15000) => {
+    url = decodeURIComponent(url + '')
+    url = url.replace(/([^:])\/{2,}/g, '$1/')
+    const response = await fetchWithTimeout(url, options, timeout)
+
+    return response
+  }
+  function fetchWithTimeout(url: string, options = {}, timeout = 15000): Promise<Response> {
+    return new Promise((resolve, reject) => {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      // 设置超时
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+      cappaFetch(location.origin + '/_capacitor_http_interceptor_?u=' + url, { ...options, signal })
+        .then((response) => {
+          clearTimeout(timeoutId); // 请求成功，清除超时
+          resolve(response);
+        })
+        .catch((error) => {
+          Toast('请求超时')
+          clearTimeout(timeoutId); // 请求失败，清除超时
+          reject(error)
+        });
+    })
+
+
+  }
+}
+
+function initVolumeControl() {
+  if (Capacitor.getPlatform() === 'web') {
+    window.VolumeControl = {
+      getVolume: async () => {
+        return 0
+      },
+      setVolume: async () => {
+
+      }
+    }
+  }
+  window.VolumeControl = cordova.plugins.VolumeControl
+  const getVolumeCopy = VolumeControl.getVolume as (callback: (res: number) => void) => void
+
+  VolumeControl.getVolume = () => {
+    return new Promise<number>((resolve, reject) => {
+      getVolumeCopy((res) => {
+        resolve(res)
+      }
+      )
+    })
+  }
 }

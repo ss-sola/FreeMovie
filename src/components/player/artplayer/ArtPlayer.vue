@@ -2,10 +2,10 @@
   <div class="player" ref="artRef"></div>
 </template>
 <script setup lang="ts">
-import { IonPage } from '@ionic/vue';
+import { IonPage } from '@ionic/vue'
 import Artplayer from 'artplayer'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { onBeforeRouteUpdate } from 'vue-router';
+import { onBeforeRouteUpdate } from 'vue-router'
 
 import { useMovieStore } from '@/stores/movieStore'
 import { init } from './index'
@@ -16,7 +16,6 @@ const artRef = ref<HTMLDivElement | null>(null)
 //player实例
 let instance: Artplayer | undefined
 onMounted(() => {
-
   if (artRef.value) {
     instance = init(artRef.value)
   }
@@ -27,7 +26,6 @@ onBeforeUnmount(() => {
     instance.destroy(true)
   }
 })
-
 </script>
 <style scoped>
 .player {
@@ -45,11 +43,11 @@ onBeforeUnmount(() => {
   padding-right: 5px;
 }
 
-:deep(.art-video-player>.art-loading) {
+:deep(.art-video-player > .art-loading) {
   z-index: 55;
 }
 
-:deep(.art-control-subtitle>.art-selector-list) {
+:deep(.art-control-subtitle > .art-selector-list) {
   max-height: 160px;
 }
 

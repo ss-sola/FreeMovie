@@ -5,13 +5,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, RouterView } from 'vue-router'
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
+import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { App } from '@capacitor/app'
 import IndexAlert from '@/components/common/IndexAlert.vue'
 import { alertController, popoverController } from '@ionic/vue'
 
-checkVersion()
+//checkVersion()
 //版本检查
 async function checkVersion() {
   try {
@@ -23,7 +22,7 @@ async function checkVersion() {
       infoNew.content = []
     }
     if (activeVersion !== newVersion) {
-      const fVersion = localStorage.getItem("freemovie_version")
+      const fVersion = localStorage.getItem('freemovie_version')
       if (fVersion == newVersion) return
       presentAlert(infoNew)
     }
@@ -43,6 +42,5 @@ async function checkVersion() {
     popover.present()
   }
 }
-
 </script>
 <style scoped></style>

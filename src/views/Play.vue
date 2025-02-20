@@ -1,27 +1,24 @@
 <template>
-    <IonPage>
-        <Header></Header>
-        <IonContent>
-            <ArtPlayer />
-            <Detail></Detail>
-            <SearchRes></SearchRes>
-        </IonContent>
-
-    </IonPage>
+  <IonPage>
+    <Header></Header>
+    <IonContent>
+      <SolaPlayer></SolaPlayer>
+      <Detail></Detail>
+      <SearchRes></SearchRes>
+    </IonContent>
+  </IonPage>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue';
-import Header from '@/components/header/Header.vue';
-import ArtPlayer from '@/components/player/ArtPlayer.vue'
+import { IonPage, IonContent } from '@ionic/vue'
+import Header from '@/components/header/Header.vue'
 import Detail from '@/components/movieDetail/Detail.vue'
 import SearchRes from '@/components/searchRes/SearchRes.vue'
-import { onIonViewWillEnter, onIonViewDidEnter, onIonViewWillLeave } from '@ionic/vue'
-import Artplayer from 'artplayer'
+import { onIonViewWillLeave } from '@ionic/vue'
+import SolaPlayer from '@/components/player/solaplayer/SolaPlayer.vue'
+import { player } from '@/components/player/solaplayer/index'
 onIonViewWillLeave(() => {
-    Artplayer.instances.forEach((item) => {
-        item.pause()
-    })
+  player.pause()
 })
 // onIonViewDidEnter(() => {
 //     console.log('view进入')
@@ -29,7 +26,6 @@ onIonViewWillLeave(() => {
 // onIonViewWillLeave(() => {
 //     console.log('view离开')
 // })
-
 </script>
 
 <style scoped></style>

@@ -26,6 +26,8 @@ declare namespace IPlugin {
     id: string
     /** 来源名 */
     name: string
+    /** 插件源地址 */
+    from: string
     /** 插件版本 */
     version?: string
     /** 远程更新的url */
@@ -41,7 +43,7 @@ declare namespace IPlugin {
     /**搜索 */
     search?: (query: string, page?: number) => Promise<ISearchResult>
     /**播放 */
-    play: (movieItem: IMovie.IMovieSource) => Promise<IMoiveSourceResult>
+    play?: (url: string, movieItem: IMovie.IMovieSource) => Promise<IMoiveSourceResult>
   }
   export type pluginMoudleKey = keyof IPlugin.IPluginModule
   interface IPluginModule extends IPluginDefine {

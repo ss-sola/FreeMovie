@@ -7,3 +7,10 @@ declare module '@capacitor/clipboard' {
     read(): Promise<{ value: string; type: string }>
   }
 }
+
+interface VolumeControlPlugin {
+  setVolume(volume: number): void;
+  getVolume(): Promise<number>;
+}
+declare var cordova
+declare var VolumeControl: VolumeControlPlugin;

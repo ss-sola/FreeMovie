@@ -41,6 +41,8 @@ declare namespace IEnvironment {
     pluginModules: {
       http: typeof CapacitorHttp
       CryptoJS: typeof CryptoJS
+      analysis: function
+      proxyImg: function
     }
     TableName: {
       Plugin: string

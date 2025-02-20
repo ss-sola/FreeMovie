@@ -15,6 +15,7 @@ const play = async function (item: IMovie.IMovieBase) {
 
   const store = useMovieStore()
   const movieStore = store.movieStore
+  store.clearMovieStore()
   //路由跳转
   await GRouter.toPlay()
   const parm = {} as IMovie.IMovieBase
@@ -31,6 +32,7 @@ const play = async function (item: IMovie.IMovieBase) {
   } else {
     console.log('没有线路')
   }
+  console.log('resItem', resItem)
 }
 
 export { play }

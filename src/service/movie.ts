@@ -2,6 +2,7 @@ import { usePluginStore } from '@/stores/pluginStroe'
 import { useSearchStore } from '@/stores/searchStore'
 import { putPluginIdToBase } from '@/service/plugin'
 import { useMovieStore } from '@/stores/movieStore'
+import { analysis } from '@/plugin/webView'
 const titleFilter = ['电影解说']
 const tagFilter = ['未播放']
 const filter = { title: titleFilter, tag: tagFilter }
@@ -44,21 +45,71 @@ const doSearch = async () => {
 }
 const doPlay = async () => {
   const pluginMap = usePluginStore().pluginModulesMap
-  const movieStore = useMovieStore().movieStore
+  const store = useMovieStore()
+  const movieStore = store.movieStore
+  movieStore.playStatus = IConfig.IPlayStatus.Getting
   const options = {} as IMovie.IMovieSource
   Object.assign(options, movieStore)
+  let playData = {} as IPlugin.IMoiveSourceResult
 
-  const playData = await pluginMap[movieStore.pluginId].play(options)
-  // if (playData.m3u8Content) {
-  //   //将该内容作为本地链接的文件内容,文件类型设置为m3u8文件
-  //   const url = window.URL.createObjectURL(new Blob([playData.m3u8Content]))
-  //   movieStore.url = url
-  // } else {
-  //   movieStore.url = playData.url
-  // }
+  let url = getUrl(options)
+
+
+  try {
+    let movieHash = store.movieHash
+    const plugin = pluginMap[movieStore.pluginId]
+    const promises = [analysisPlatData(plugin.from + url)]
+    if (plugin && plugin.play) {
+      // @ts-ignore
+      promises.push(plugin.play(url, options))
+    }
+    playData = await Promise.any(promises)
+
+    if (store.movieHash != movieHash) {
+      console.log("取消播放", movieHash, store.movieHash)
+      return playData
+    }
+    if (!playData.url) {
+      throw new Error('获取播放地址失败')
+    }
+  } catch (error) {
+    console.error(error)
+    movieStore.playStatus = IConfig.IPlayStatus.ErrorPlay
+    return playData
+  }
+
+
+  console.log('playData', playData)
+
   movieStore.playStatus = IConfig.IPlayStatus.Waiting
   movieStore.url = playData.url
   return playData
+
+  function getUrl(options: IMovie.IMovieSource) {
+    let url = ''
+    try {
+      const lineItem = options.line as IMovie.ILineItem
+      const activeLine = options.activeLine as string
+      const total = lineItem[activeLine].total
+      for (let i = 0; i < total.length; i++) {
+        if (total[i].html == options.activeNumber) {
+          url = total[i].href
+          break;
+        }
+      }
+    } catch (e) { }
+    return url
+  }
+  async function analysisPlatData(url: string) {
+    return new Promise<IPlugin.IMoiveSourceResult>(async (resolve, reject) => {
+      const res = await analysis({ url: url })
+      if (!res.videoUrl) reject()
+      const data = {
+        url: res.videoUrl
+      } as IPlugin.IMoiveSourceResult
+      resolve(data)
+    })
+  }
 }
 
 function filterSearchResult(resData: IMovie.IMovieBase[]) {

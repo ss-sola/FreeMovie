@@ -22,6 +22,9 @@ const search = async function (title) {
         var img = item.querySelector('img').getAttribute('data-original')
         var title = item.querySelector('.module-card-item-title').textContent
 
+        if (!img.startsWith('http')) {
+            img = meta.from + img
+        }
         const obj = {
             platform: meta.from,
             title: title,
@@ -81,15 +84,7 @@ async function getDetailData(item) {
     return item
 }
 
-const play = async function (option) {
-
-    let url = ''
-    const total = option.line[option.activeLine].total
-    for (let i = 0; i < total.length; i++) {
-        if (total[i].html == option.activeNumber) {
-            url = total[i].href
-        }
-    }
+const play = async function (url, option) {
 
     const res = await fetch(meta.from + url)
     if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
@@ -108,6 +103,7 @@ const play = async function (option) {
 module.exports = {
     author: 'MetaSola',
     name: meta.name,
+    from: meta.from,
     version: 1.0,
     getDetailData: getDetailData,
     search: search,

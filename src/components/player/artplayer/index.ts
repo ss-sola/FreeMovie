@@ -4,7 +4,7 @@ import { StatusBar, Style } from '@capacitor/status-bar'
 import { ScreenOrientation } from '@capacitor/screen-orientation'
 import { useMovieStore } from '@/stores/movieStore'
 import { useArtplayerStore } from '@/stores/artplayerStore'
-import { initWatch, playProcess } from '@/components/player/action'
+import { initWatch, playProcess } from '@/components/player/artplayer/action'
 import { watch } from 'vue'
 
 let artplayer: Artplayer | undefined

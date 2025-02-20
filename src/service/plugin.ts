@@ -4,7 +4,8 @@ import {
   addPlugin,
   removePlugin,
   doEnablePlugin,
-  doPluginHook
+  doPluginHook,
+  doUpdatatePlugin
 } from '@/sqlit/plugin'
 import { usePluginStore } from '@/stores/pluginStroe'
 import { safeRunScript, checkPluginMoudle } from '@/utils/static'
@@ -72,15 +73,37 @@ const registPlugin = async (content: string) => {
   }
   await closeConnection(IConfig.Database)
 }
+const updatePlugin = async (id: string, content: string) => {
+  let plugin = {
+    id: id,
+    content: content
+  } as IDatabase.plugin
+  const pluginModule = await turnPluginToMoudle(plugin)
+  checkPluginMoudle(pluginModule)
+  plugin = {
+    ...pluginModule,
+    ...plugin,
+    enable: true
+  }
+  await doPluginHook(doUpdatatePlugin, plugin)
+  pluginModule.enable = true
+  const pluginModules = usePluginStore().pluginModules
+  const index = pluginModules.findIndex((item) => item.id === id)
+  if (index > -1) {
+    pluginModules.splice(index, 1)
+  }
+  console.log(pluginModules)
+  pluginModules.push(pluginModule)
+  Toast('更新成功')
+
+}
 const deletePlugin = async (pluginId: string) => {
   const pluginModules = usePluginStore().pluginModules
   const index = pluginModules.findIndex((item) => item.id === pluginId)
   if (index > -1) {
     pluginModules.splice(index, 1)
   }
-  await createConnection(IConfig.Database, IConfig.DatabaseVersion)
-  await removePlugin(pluginId)
-  await closeConnection(IConfig.Database)
+  await doPluginHook(removePlugin, pluginId)
 }
 const putPluginIdToBase = (dataList: IMovie.IMovieBase[], module: IPlugin.IPluginDefine) => {
   for (const item of dataList) {
@@ -98,4 +121,4 @@ const enablePlugin = async (
   })
   await doPluginHook(doEnablePlugin, pluginId, able)
 }
-export { initPluginModules, registPlugin, putPluginIdToBase, deletePlugin, enablePlugin }
+export { initPluginModules, registPlugin, putPluginIdToBase, deletePlugin, enablePlugin, updatePlugin }
