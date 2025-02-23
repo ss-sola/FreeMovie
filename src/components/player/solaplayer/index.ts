@@ -87,14 +87,7 @@ function initListeners() {
     player.on('error', (e: any) => {
         console.error('播放器错误:', player.error(), e)
     })
-    player.on('volumechange', () => {
-        const volume = player.volume();
-        console.log("volume")
-    });
 
-    player.on('brightnesschange', async () => {
-        console.log("bright")
-    });
     document.querySelector('.video-container')?.addEventListener('dblclick', togglePlay)
     document.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
@@ -125,6 +118,7 @@ function initWatch() {
     watch(
         () => store.movieHash,
         () => {
+            player.pause()
             doPlay().then(async (res) => {
                 if (movieStore.url && res.url) {
                     let type = movieStore.type

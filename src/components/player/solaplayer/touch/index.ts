@@ -66,7 +66,6 @@ export const onTouchMove = (event: TouchEvent) => {
     const touch = event.touches[0];
     const diffX = touch.pageX - startX;
     const diffY = touch.pageY - startY;
-    // console.log(touch)
     // 如果还没有开始触摸操作，或者滑动距离没有超过阈值，直接返回
     if ((Math.abs(diffX) <= threshold && Math.abs(diffY) <= threshold)) {
         return;

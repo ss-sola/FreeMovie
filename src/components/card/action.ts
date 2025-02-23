@@ -20,8 +20,14 @@ const play = async function (item: IMovie.IMovieBase) {
   await GRouter.toPlay()
   const parm = {} as IMovie.IMovieBase
   Object.assign(parm, item)
+  let resItem: IMovie.IMovieBase = {} as IMovie.IMovieBase
   //获取线路信息
-  const resItem = await pluginModulesMap[item.pluginId].getDetailData(parm)
+  try {
+    resItem = await pluginModulesMap[item.pluginId].getDetailData(parm)
+  } catch (error) {
+    Toast('获取线路失败')
+  }
+
 
   if (resItem.line) {
     Object.assign(movieStore, resItem, item)

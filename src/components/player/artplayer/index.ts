@@ -33,7 +33,6 @@ const init = function (container: HTMLDivElement) {
     //type: 'm3u8',
     customType: {
       m3u8: function (video, url, art) {
-        console.log('m3u8>>' + url)
         if (Hls.isSupported()) {
           if (art.hls) art.hls.destroy()
           const hls = new Hls()

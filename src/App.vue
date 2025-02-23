@@ -10,7 +10,7 @@ import { App } from '@capacitor/app'
 import IndexAlert from '@/components/common/IndexAlert.vue'
 import { alertController, popoverController } from '@ionic/vue'
 
-//checkVersion()
+checkVersion()
 //版本检查
 async function checkVersion() {
   try {

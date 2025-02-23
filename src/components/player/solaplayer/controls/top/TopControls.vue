@@ -31,7 +31,6 @@ import { useMovieStore } from '@/stores/movieStore'
 
 const movieStore = useMovieStore().movieStore
 function goBack() {
-  console.log(options)
   if (options.isFullScreen) toggleFullScreen()
   else window.history.back()
 }

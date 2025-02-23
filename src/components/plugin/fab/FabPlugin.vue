@@ -59,7 +59,7 @@ import { actionSheetButtons } from './index'
 import { didPresent, networkInstallPlugin } from './action'
 
 const popoverOpen = ref(false)
-const urlValue = ref('https://blog.metasola.cn/freemovie/plug/source.json')
+const urlValue = ref('https://blog.metasola.cn/freemovie/source.json')
 function openPopover(e: CustomEvent) {
   didPresent(e, { popoverOpen })
 }

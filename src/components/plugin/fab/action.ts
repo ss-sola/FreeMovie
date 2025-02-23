@@ -15,7 +15,7 @@ async function nativeInstallPlugin() {
       await registPlugin(pluginContent)
     } catch (error) {
       Toast('插件安装失败')
-
+      return
     }
 
     Toast('插件安装成功')

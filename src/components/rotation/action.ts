@@ -53,18 +53,17 @@ function mouseMove() {
   let timer: NodeJS.Timeout
   //鼠标移动事件
   rotationStore.divBody.onpointerdown = function (e) {
-    console.log(e)
     //清除惯性定时器
     clearInterval(timer)
     e = e || window.event
-    //鼠标点击位置
-    ;(startX = e.clientX), (startY = e.clientY)
+      //鼠标点击位置
+      ; (startX = e.clientX), (startY = e.clientY)
     this.onpointermove = function (e) {
       playSpin(false)
       //鼠标点击时 停止自动旋转//鼠标点击时 停止自动旋转
       e = e || window.event
-      //记录结束时位置
-      ;(endX = e.clientX), (endY = e.clientY)
+        //记录结束时位置
+        ; (endX = e.clientX), (endY = e.clientY)
       //计算移动距离 并修改角度
       rotationStore.desX = endX - startX
       rotationStore.desY = endY - startY

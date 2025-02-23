@@ -51,7 +51,6 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   if (player) {
-    console.log('dis')
     player.dispose()
   }
 })

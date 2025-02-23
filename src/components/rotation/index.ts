@@ -20,7 +20,6 @@ async function init(divBody: HTMLDivElement) {
   if (!rotationStore.imgLen) return
   rotationStore.radius = 250
   if (isPC()) {
-    console.log('pc')
     mouseMove()
     rotationStore.radius = 480
   }

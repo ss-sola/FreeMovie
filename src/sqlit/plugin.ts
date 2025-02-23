@@ -36,7 +36,6 @@ const addPlugin = async (plugin: IDatabase.plugin) => {
     statement: `INSERT INTO ${IConfig.TableName.Plugin} ( name,version,content,url, enable) VALUES (?,?,?,?, ?)`,
     values: [plugin.name, plugin.version, plugin.content, plugin.url, IConfig.Enable]
   })
-  console.log(res)
   return res.changes?.lastId
 }
 const removePlugin = async (pluginId: string) => {
@@ -60,7 +59,6 @@ const doUpdatatePlugin = async (newPlugin: IDatabase.plugin) => {
     ...plugin,
     ...newPlugin
   }
-  console.log(plugin)
   await CapacitorSQLite.run({
     database: IConfig.Database,
     statement: `UPDATE ${IConfig.TableName.Plugin} SET name = ?, version = ?, content = ?, url = ? WHERE id = ?`,

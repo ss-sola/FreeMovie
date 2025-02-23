@@ -19,7 +19,6 @@ async function doRemove(plugin: IPlugin.IPluginModule) {
   }
 }
 async function doUpdate(plugin: IPlugin.IPluginModule) {
-  console.log(plugin)
   const url = plugin.srcUrl
   if (!url) {
     Toast('插件更新地址为空')

@@ -47,9 +47,7 @@ app.use(VueLazyload, {
 app.use(IonicVue)
 app.use(createPinia())
 app.use(router)
-// app.config.errorHandler = (error, vm, info) => {
-//   console.log(error)
-// }
+
 if (platform == 'web') {
   window.addEventListener('DOMContentLoaded', async () => {
     const jeepEl = document.createElement('jeep-sqlite')

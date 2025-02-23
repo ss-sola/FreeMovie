@@ -51,15 +51,13 @@ declare namespace IMovie {
     }
   }
 
-  /**视频播放类型 */
-  export type IMovieType = 'mp4' | 'm3u8' | 'flv' | ''
 
   // 片源定义
   export interface IMovieSource extends IMovie.IMovieItem {
     /** 播放地址 */
     url?: string
     /** 视频播放类型 */
-    type?: IMovie.IMovieType
+    type?: string
     /**当前线路 */
     activeLine?: string
     /**当前播放第几集 */

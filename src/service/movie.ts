@@ -18,7 +18,7 @@ const doSearch = async () => {
       if (module.search && module.enable) {
         let resData = (await module.search(searchContent.content, 1)).data
         putPluginIdToBase(resData, module)
-
+        console.log('resData', resData)
         resData = filterSearchResult(resData)
 
         if (resData.length > 0) {
@@ -58,7 +58,11 @@ const doPlay = async () => {
   try {
     let movieHash = store.movieHash
     const plugin = pluginMap[movieStore.pluginId]
-    const promises = [analysisPlatData(plugin.from + url)]
+    if (!url.startsWith('http')) {
+      url = plugin.from + url
+    }
+    console.log(url)
+    const promises = [analysisPlatData(url)]
     if (plugin && plugin.play) {
       // @ts-ignore
       promises.push(plugin.play(url, options))
@@ -83,6 +87,7 @@ const doPlay = async () => {
 
   movieStore.playStatus = IConfig.IPlayStatus.Waiting
   movieStore.url = playData.url
+  movieStore.type = playData.type
   return playData
 
   function getUrl(options: IMovie.IMovieSource) {

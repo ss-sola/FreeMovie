@@ -7,7 +7,6 @@ import { watch } from 'vue'
 import { CapacitorHttp } from '@capacitor/core'
 
 const playProcess = async () => {
-  console.log('playProcess')
   const movieStore = useMovieStore().movieStore
   const history = useHistoryStore()
   movieStore.playStatus = IConfig.IPlayStatus.Playing + movieStore.title
@@ -15,7 +14,6 @@ const playProcess = async () => {
   Object.assign(objOption, movieStore)
 
   history.playHistory.unshift(objOption)
-  console.log('history.playHistory', history.playHistory)
   //只取15个
   history.sliceHistory()
 

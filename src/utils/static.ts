@@ -51,6 +51,9 @@ function safeRunContext() {
     encodeURIComponent: true,
     URL: true,
     Blob: true,
+    JSON: true,
+    eval: true,
+    Object: true,
   }
   const handler: ProxyHandler<Window & typeof globalThis> = {
     get(target: Window & typeof globalThis, prop: PropertyKey): any {

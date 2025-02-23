@@ -23,17 +23,19 @@ export const initRotationData = async () => {
     if (rotationData.length > 0) localStorage.setItem('rotationData', JSON.stringify(rotationData))
   }
 
-  function buildPromises(dataArr: IMovie.IMovieItem[]) {
+  function buildPromises(dataArr: IMovie.IMovieBase[]) {
     const res = pluginModules.map(async (module) => {
       return new Promise<void>(async (resolve, reject) => {
-        if (module.initRotationData) {
-          const resData = await module.initRotationData()
-          putPluginIdToBase(resData, module)
-          rotationDataPush(dataArr, resData)
+        try {
+          if (module.initRotationData) {
+            const resData = await module.initRotationData()
+            rotationDataPush(dataArr, resData)
+            putPluginIdToBase(dataArr, module)
+          }
+          resolve()
+        } catch (err) {
+          reject(err)
         }
-        resolve()
-      }).catch((err) => {
-        IConfig.errCatch(err)
       })
     })
     return res

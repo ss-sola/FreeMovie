@@ -17,6 +17,7 @@ declare namespace IPlugin {
     headers?: Record<string, string>
     /** 播放地址 */
     url?: string
+    type?: string
     /** UA */
     userAgent?: string
     /**m3u8内容 */

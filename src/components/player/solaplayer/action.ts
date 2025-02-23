@@ -83,7 +83,6 @@ export function hideControls() {
 }
 
 export const playProcess = async () => {
-    console.log('playProcess')
     const movieStore = useMovieStore().movieStore
     const history = useHistoryStore()
     movieStore.playStatus = IConfig.IPlayStatus.Playing + movieStore.title

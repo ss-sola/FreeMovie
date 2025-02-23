@@ -54,6 +54,16 @@ public class WebViewHelper {
             "application/x-subrip", // SRT 字幕
             "application/x-mpegURL" // 旧版 HLS 播放列表
     ));
+    List<String> videoSuffix=Arrays.asList(
+            ".mp4",
+            ".m3u8",
+            ".avi",
+            ".mov",
+            ".mkv",
+            ".webm",
+            ".flv",
+            ".wmv"
+    );
     @SuppressLint("SetJavaScriptEnabled")
     public WebViewHelper(Activity activity) {
         webView = new WebView(activity);
@@ -101,7 +111,7 @@ public class WebViewHelper {
                 String contentType = getContentType(videoUrl);
                 Log.d(TAG, "Content-Type: " + contentType+"  videoUrl:"+videoUrl);
 
-                if (contentType != null && videoContentTypes.contains(contentType)) {
+                if (videoContentTypes.contains(contentType)||(isVideoUrl(videoUrl)&& "text/html; charset=utf-8".equals(contentType) )) {
                     isVideoFound = true;  // 标记已找到
                     mainHandler.removeCallbacks(timeoutRunnable);  // 移除超时任务
 
@@ -169,6 +179,12 @@ public class WebViewHelper {
         return null;
     }
 
+    private Boolean isVideoUrl(String url){
+        for(String t:videoSuffix){
+            if(url.endsWith(t)) return true;
+        }
+        return false;
+    }
     public interface VideoCallback {
         void onVideoFound(String videoUrl, String pageUrl);
     }

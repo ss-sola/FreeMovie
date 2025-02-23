@@ -92,7 +92,6 @@ const updatePlugin = async (id: string, content: string) => {
   if (index > -1) {
     pluginModules.splice(index, 1)
   }
-  console.log(pluginModules)
   pluginModules.push(pluginModule)
   Toast('更新成功')
 

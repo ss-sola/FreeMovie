@@ -33,7 +33,6 @@ export const useMovieStore = defineStore('movieStore', () => {
       let labels = Object.keys(movieStore.labelMap)
       if (labels.length > 0) num += labels.length
     }
-    console.log(num)
     return num >= 2
   })
   function clearMovieStore() {

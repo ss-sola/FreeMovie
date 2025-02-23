@@ -25,7 +25,7 @@ export const IConfig = {
     Plugin: 'plugin'
   },
   errCatch: (e: any) => {
-    console.log(e)
+    console.error(e)
   },
   IPlayStatus: {
     Getting: '获取播放地址中。。。',
