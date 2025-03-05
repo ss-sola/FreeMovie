@@ -33,4 +33,16 @@ const closeConnection = async function (database: string) {
     database: database
   })
 }
-export { createConnection, closeConnection }
+const doSqlteHook = async (func: Function, ...args: any[]) => {
+  try {
+    await createConnection(IConfig.Database, IConfig.DatabaseVersion)
+    await func(...args)
+    await closeConnection(IConfig.Database)
+    return
+  } catch (error) {
+    await func(...args)
+    await closeConnection(IConfig.Database)
+    return
+  }
+}
+export { createConnection, closeConnection, doSqlteHook }

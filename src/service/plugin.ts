@@ -1,12 +1,11 @@
-import { createConnection, closeConnection } from '@/sqlit/commen'
+import { createConnection, closeConnection, doSqlteHook } from '@/sqlite/commen'
 import {
   getAllPlugins,
   addPlugin,
   removePlugin,
   doEnablePlugin,
-  doPluginHook,
   doUpdatatePlugin
-} from '@/sqlit/plugin'
+} from '@/sqlite/plugin'
 import { usePluginStore } from '@/stores/pluginStroe'
 import { safeRunScript, checkPluginMoudle } from '@/utils/static'
 
@@ -85,7 +84,7 @@ const updatePlugin = async (id: string, content: string) => {
     ...plugin,
     enable: true
   }
-  await doPluginHook(doUpdatatePlugin, plugin)
+  await doSqlteHook(doUpdatatePlugin, plugin)
   pluginModule.enable = true
   const pluginModules = usePluginStore().pluginModules
   const index = pluginModules.findIndex((item) => item.id === id)
@@ -102,7 +101,7 @@ const deletePlugin = async (pluginId: string) => {
   if (index > -1) {
     pluginModules.splice(index, 1)
   }
-  await doPluginHook(removePlugin, pluginId)
+  await doSqlteHook(removePlugin, pluginId)
 }
 const putPluginIdToBase = (dataList: IMovie.IMovieBase[], module: IPlugin.IPluginDefine) => {
   for (const item of dataList) {
@@ -118,6 +117,6 @@ const enablePlugin = async (
       item.enable = able == 1
     }
   })
-  await doPluginHook(doEnablePlugin, pluginId, able)
+  await doSqlteHook(doEnablePlugin, pluginId, able)
 }
 export { initPluginModules, registPlugin, putPluginIdToBase, deletePlugin, enablePlugin, updatePlugin }

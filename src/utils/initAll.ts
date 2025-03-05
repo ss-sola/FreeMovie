@@ -1,6 +1,6 @@
-import { initTables } from '@/sqlit/init'
+import { initTables } from '@/sqlite/init'
 import { initPluginModules } from '@/service/plugin'
-import { createConnection, closeConnection } from '@/sqlit/commen'
+import { createConnection, closeConnection } from '@/sqlite/commen'
 import { IConfig } from '@/utils/config'
 import { Capacitor } from '@capacitor/core'
 import { toastController } from '@ionic/vue'
@@ -59,7 +59,7 @@ function initFetch() {
           resolve(response);
         })
         .catch((error) => {
-          Toast('请求超时')
+          //Toast('请求超时')
           clearTimeout(timeoutId); // 请求失败，清除超时
           reject(error)
         });

@@ -18,7 +18,7 @@ const doSearch = async () => {
       if (module.search && module.enable) {
         let resData = (await module.search(searchContent.content, 1)).data
         putPluginIdToBase(resData, module)
-        console.log('resData', resData)
+        console.log(module.name, 'search', resData)
         resData = filterSearchResult(resData)
 
         if (resData.length > 0) {
@@ -53,22 +53,20 @@ const doPlay = async () => {
   let playData = {} as IPlugin.IMoiveSourceResult
 
   let url = getUrl(options)
-
+  let movieHash = store.movieHash
+  const plugin = pluginMap[movieStore.pluginId]
+  if (!url.startsWith('http')) {
+    url = plugin.from + url
+  }
 
   try {
-    let movieHash = store.movieHash
-    const plugin = pluginMap[movieStore.pluginId]
-    if (!url.startsWith('http')) {
-      url = plugin.from + url
-    }
-    console.log(url)
     const promises = [analysisPlatData(url)]
     if (plugin && plugin.play) {
-      // @ts-ignore
       promises.push(plugin.play(url, options))
     }
+    console.log(movieHash)
     playData = await Promise.any(promises)
-
+    console.log(2)
     if (store.movieHash != movieHash) {
       console.log("取消播放", movieHash, store.movieHash)
       return playData

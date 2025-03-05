@@ -8,8 +8,7 @@
     >
       <div class="control-group left">
         <span @click="goBack"><i class="iconfont icon-fanhui1"></i></span>
-        <span class="video-title"> {{ movieStore.title }} </span>
-        <span>{{ movieStore.activeNumber }}</span>
+        <span class="video-title"> {{ movieStore.title + ' ' + movieStore.activeNumber }} </span>
       </div>
       <div class="control-group right">
         <span class="time">{{
@@ -65,5 +64,9 @@ function goBack() {
   justify-content: space-between;
   align-items: center;
   background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(65, 63, 63, 0));
+}
+.video-title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

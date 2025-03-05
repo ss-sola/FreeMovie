@@ -105,12 +105,10 @@ export function toggleFullScreen() {
     if (div) {
         if (!document.fullscreenElement) {
             div.requestFullscreen() // 标准浏览器
-            options.isFullScreen = true
             ScreenOrientation.lock({ orientation: 'landscape' })
             hideNavigationBar()
         } else {
             document.exitFullscreen() // 标准浏览器
-            options.isFullScreen = false
             ScreenOrientation.lock({ orientation: 'portrait' })
             showNavigationBar()
         }

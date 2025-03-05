@@ -20,7 +20,7 @@ const play = async function (item: IMovie.IMovieBase) {
   await GRouter.toPlay()
   const parm = {} as IMovie.IMovieBase
   Object.assign(parm, item)
-  let resItem: IMovie.IMovieBase = {} as IMovie.IMovieBase
+  let resItem = {} as IMovie.IMovieSource
   //获取线路信息
   try {
     resItem = await pluginModulesMap[item.pluginId].getDetailData(parm)
@@ -30,13 +30,11 @@ const play = async function (item: IMovie.IMovieBase) {
 
 
   if (resItem.line) {
-    Object.assign(movieStore, resItem, item)
     const firstKey = Object.keys(resItem.line)[0]
-    movieStore.activeLine = resItem.line[firstKey].html
-    movieStore.activeNumber = resItem.line[firstKey].total[0].html
-    movieStore.playStatus = IConfig.IPlayStatus.Getting
-  } else {
-    console.log('没有线路')
+    resItem.activeLine = resItem.line[firstKey].html
+    resItem.activeNumber = resItem.line[firstKey].total[0].html
+    resItem.playStatus = IConfig.IPlayStatus.Getting
+    Object.assign(movieStore, resItem, item)
   }
   console.log('resItem', resItem)
 }

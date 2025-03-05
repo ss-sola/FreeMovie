@@ -12,9 +12,11 @@ export const initRotationData = async () => {
   if (rotationData.length > 0) {
     const arr: IMovie.IMovieItem[] = []
     const promises = buildPromises(arr)
-    Promise.allSettled(promises)
+    Promise.all(promises)
       .then(() => {
-        if (arr.length > 0) localStorage.setItem('rotationData', JSON.stringify(arr))
+        if (arr.length > 0) {
+          localStorage.setItem('rotationData', JSON.stringify(arr))
+        }
       })
       .catch(IConfig.errCatch)
   } else {
@@ -29,12 +31,13 @@ export const initRotationData = async () => {
         try {
           if (module.initRotationData) {
             const resData = await module.initRotationData()
+            putPluginIdToBase(resData, module)
             rotationDataPush(dataArr, resData)
-            putPluginIdToBase(dataArr, module)
+
           }
           resolve()
         } catch (err) {
-          reject(err)
+          resolve()
         }
       })
     })

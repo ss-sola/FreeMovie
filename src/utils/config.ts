@@ -1,5 +1,5 @@
 import { CapacitorHttp } from '@capacitor/core'
-import { safeRunContext } from '@/utils/static'
+import { globalProxy } from '@/utils/safeRunContext'
 import { analysis } from '@/plugin/webView'
 import CryptoJS from 'crypto-js'
 
@@ -35,7 +35,7 @@ export const IConfig = {
     ErrorGet: '获取播放地址失败',
     ErrorPlay: '播放失败'
   },
-  safeWindow: safeRunContext()
+  safeWindow: globalProxy
 }
 
 

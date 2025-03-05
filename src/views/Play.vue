@@ -12,8 +12,8 @@
 <script setup lang="ts">
 import { IonPage, IonContent } from '@ionic/vue'
 import Header from '@/components/header/Header.vue'
-import Detail from '@/components/movieDetail/Detail.vue'
-import SearchRes from '@/components/searchRes/SearchRes.vue'
+import Detail from '@/components/movie-detail/Detail.vue'
+import SearchRes from '@/components/search-res/SearchRes.vue'
 import { onIonViewWillLeave } from '@ionic/vue'
 import SolaPlayer from '@/components/player/solaplayer/SolaPlayer.vue'
 import { player } from '@/components/player/solaplayer/index'

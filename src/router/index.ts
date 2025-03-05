@@ -12,11 +12,6 @@ const router = createRouter({
       }
     },
     {
-      path: '/searchRes',
-      name: 'searchRes',
-      component: () => import('@/views/SearchRes.vue')
-    },
-    {
       path: '/play',
       name: 'play',
       component: () => import('@/views/Play.vue')
@@ -32,14 +27,19 @@ const router = createRouter({
       component: () => import('@/views/Mine.vue')
     },
     {
+      path: '/about',
+      name: 'about',
+      component: () => import('@/views/About.vue')
+    },
+    {
+      path: '/FolderList',
+      name: 'FolderList',
+      component: () => import('@/views/FolderList.vue')
+    },
+    {
       path: '/test',
       name: 'test',
       component: () => import('@/views/Test.vue')
-    },
-    {
-      path: '/sqtest',
-      name: 'sqtest',
-      component: () => import('@/views/SqlTest.vue')
     }
   ]
 })

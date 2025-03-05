@@ -61,6 +61,7 @@ function initOptions() {
 function initListeners() {
     player.on('play', () => (options.isPlaying = true))
     player.on('pause', () => (options.isPlaying = false))
+    player.on('playing', () => (store.movieStore.playStatus = IConfig.IPlayStatus.Playing + store.movieStore.title))
     player.one('playing', function () {
         store.movieStore.playStatus = IConfig.IPlayStatus.Playing + store.movieStore.title
         playProcess()
@@ -96,6 +97,7 @@ function initListeners() {
             options.isFullScreen = false
         }
     });
+
 }
 function initWatch() {
 
@@ -119,6 +121,7 @@ function initWatch() {
         () => store.movieHash,
         () => {
             player.pause()
+            if (!movieStore.id) return
             doPlay().then(async (res) => {
                 if (movieStore.url && res.url) {
                     let type = movieStore.type

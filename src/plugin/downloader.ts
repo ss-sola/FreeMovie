@@ -15,7 +15,7 @@ interface Progress extends ProgressStatus {
 export interface PluginListenerHandle {
   remove: () => Promise<void>;
 }
-export interface EchoPlugin extends Plugin {
+export interface DownloadPlugin extends Plugin {
   download(options: downOption): Promise<{ value: string }>;
   pause(options: downOption): Promise<{ value: string }>;
   resume(options: any): Promise<{ value: string }>;
@@ -23,7 +23,7 @@ export interface EchoPlugin extends Plugin {
 
 }
 
-const Downloader = registerPlugin<EchoPlugin>('Downloader');
+const Downloader = registerPlugin<DownloadPlugin>('Downloader');
 
 export default Downloader;
 

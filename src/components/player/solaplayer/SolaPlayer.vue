@@ -32,7 +32,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed, type Ref } from 'vue'
-import videojs from 'video.js'
 import type VideoJsPlayer from 'video.js/dist/types/player'
 import 'video.js/dist/video-js.css'
 

@@ -20,6 +20,9 @@ export class GRouter {
   toMine() {
     router.push('/mine')
   }
+  toAbout() {
+    router.push('/about')
+  }
 }
 const EC = new GRouter()
 

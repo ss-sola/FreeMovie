@@ -1,3 +1,5 @@
+
+
 let isPC = () => {
   const userAgentInfo = navigator.userAgent
   const Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']
@@ -31,41 +33,6 @@ function checkPluginMoudle(pluginMoudle: IPlugin.IPluginModule) {
   }
 }
 
-function safeRunContext() {
-  const whitelist = {
-    Set: true,
-    Map: true,
-    navigator: true,
-    console: true,
-    fetch: true,
-    XMLHttpRequest: true,
-    FormData: true,
-    DOMParser: true,
-    Promise: true,
-    String: true,
-    Array: true,
-    unescape: true,
-    decodeURI: true,
-    decodeURIComponent: true,
-    encodeURI: true,
-    encodeURIComponent: true,
-    URL: true,
-    Blob: true,
-    JSON: true,
-    eval: true,
-    Object: true,
-  }
-  const handler: ProxyHandler<Window & typeof globalThis> = {
-    get(target: Window & typeof globalThis, prop: PropertyKey): any {
-      if (whitelist[prop as keyof typeof whitelist] && prop in target) {
-        // 使用类型断言确保 prop 是字符串索引类型
-        return target[prop as keyof typeof target]
-      }
-      return undefined
-    }
-  }
-  return new Proxy(window as Window & typeof globalThis, handler)
-}
 
 async function safeRunScript(content: string, fnOption: any) {
   try {
@@ -89,4 +56,4 @@ function isValidURL(url: string) {
     return false
   }
 }
-export { isPC, emptyElement, sleep, safeRunContext, safeRunScript, checkPluginMoudle, isValidURL }
+export { isPC, emptyElement, sleep, safeRunScript, checkPluginMoudle, isValidURL }

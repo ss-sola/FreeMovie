@@ -18,4 +18,4 @@ function analysis(options: option): Promise<AnalysisResult> {
     return webViewPlugin.analysis(options);
 }
 
-export { webViewPlugin, analysis };
+export { analysis };

@@ -1,5 +1,5 @@
 import { CapacitorSQLite } from '@capacitor-community/sqlite'
-import { createConnection, closeConnection } from '@/sqlit/commen'
+import { createConnection, closeConnection } from '@/sqlite/commen'
 
 const getAllEndblePlugins = async () => {
   const allPlugins = await CapacitorSQLite.query({
@@ -77,18 +77,7 @@ const getPlugin = async (pluginId: string) => {
   return null
 }
 
-const doPluginHook = async (func: Function, ...args: any[]) => {
-  try {
-    await createConnection(IConfig.Database, IConfig.DatabaseVersion)
-    await func(...args)
-    await closeConnection(IConfig.Database)
-    return
-  } catch (error) {
-    await func(...args)
-    await closeConnection(IConfig.Database)
-    return
-  }
-}
+
 
 export {
   getAllPlugins,
@@ -98,6 +87,5 @@ export {
   removePlugin,
   removeAllPlugins,
   doUpdatatePlugin,
-  getPlugin,
-  doPluginHook
+  getPlugin
 }

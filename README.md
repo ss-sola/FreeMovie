@@ -1,61 +1,20 @@
-# FreeMovie
+本软件作者为MetaSola。软件为开源免费，如果你下载到了付费版本，请勿相信，并联系作者进行举报。
 
-This template should help get you started developing with Vue 3 in Vite.
+软件相关信息在官方网站[https://blog.metasola.cn/FreeMovie/使用指南](https://blog.metasola.cn/FreeMovie/使用指南) 中可以找到。本项目目前只有安卓版。
 
-## Recommended IDE Setup
+有任何疑问可以加入QQ频道讨论:
+【FreeMovie】[https://pd.qq.com/s/rdx55hba](https://pd.qq.com/s/rdx55hba)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+项目开源地址:[https://github.com/ss-sola/FreeMovie](https://github.com/ss-sola/FreeMovie)，本项目基于Apache-2.0协议开源，请勿用于商业用途。打包和二次开发请保留代码出处。
 
-## Type Support for `.vue` Imports in TS
+最新版下载地址:[https://blog.metasola.cn/freemovie/FreeMovie.apk](https://blog.metasola.cn/freemovie/FreeMovie.apk)
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+插件试用地址:[https://blog.metasola.cn/freemovie/source.json](https://blog.metasola.cn/freemovie/source.json)
 
-## Customize configuration
+### 预览
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+![alt text](/.imgs/main.jpg)
 
-## Project Setup
+### 免责声明
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+本软件仅用于学习交流，软件所有数据均来自插件，与本软件无关，作者不承担任何责任。播放过程中的广告均为视频内部嵌入，请勿相信。

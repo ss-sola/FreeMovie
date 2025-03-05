@@ -10,7 +10,7 @@ const meta = {
 }
 const cacheUrl = 'https://danmu.yhdmjx.com/'
 async function initFrom() {
-  const res = await fetch('https://916dm.fans/')
+  const res = await fetch('https://www.916dm.fans/')
 
   const parser = new DOMParser()
   const doc = parser.parseFromString(await res.text(), 'text/html')
