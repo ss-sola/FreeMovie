@@ -10,12 +10,21 @@ import java.util.List;
 
 
 public class DownloadState {
+    int id;
     String fileURL;
     String saveFilePath;
     String type;
     private long downloadedSize;
     private long totalSize;
     List<FileFragment> childFiles = new ArrayList<>();
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFileURL() {
         return fileURL;
@@ -67,7 +76,14 @@ public class DownloadState {
 
     @Override
     public String toString() {
-
-        return "";
+        return "DownloadState{" +
+                "id=" + id +
+                ", fileURL='" + fileURL + '\'' +
+                ", saveFilePath='" + saveFilePath + '\'' +
+                ", type='" + type + '\'' +
+                ", downloadedSize=" + downloadedSize +
+                ", totalSize=" + totalSize +
+                ", childFiles=" + childFiles +
+                '}';
     }
 }

@@ -1,17 +1,22 @@
 package com.freemovie.fileDown;
 
 
-import com.getcapacitor.plugin.util.HttpRequestHandler;
+import android.content.Context;
+import android.os.Build;
 
+import com.getcapacitor.Bridge;
+
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -20,47 +25,50 @@ import java.util.concurrent.Future;
  * @description: TODO
  * @date 2024/9/20 10:20
  */
-public class Downloader implements Runnable{
-    private String id;
+public class Downloader{
+    private int id;
     protected String fileURL;
     protected List<FileFragment> childFiles;
     protected String saveFilePath;
-    protected ExecutorService executor;
-    protected static  int NUM_THREADS = Runtime.getRuntime().availableProcessors()/2;  // 线程数量
+
     protected volatile boolean pauseFlag = true; // 用于控制暂停
-    protected volatile long totalSize = 0; // 文件总大小
+    protected volatile long totalSize = 1; // 文件总大小
     protected volatile long downloadedSize = 0; // 已下载的大小
     protected String type = "default"; // 类型
-    // 设置下载速度，单位为字节/秒
 
     private List<DownloadTask> tasks;
 
     ProgressEmitter emitter;
+
+    Context context;
+    Bridge bridge;
+
+    private int errorNum=0;
 
     public synchronized void addDownloadSize(long size) {
         downloadedSize += size;
         if(emitter!=null){
             emitter.emit(downloadedSize, totalSize,"");
         }
+        System.out.println(downloadedSize+"   "+totalSize);
     }
     public Downloader(DownloadState downloadState) {
-        this.executor = Executors.newFixedThreadPool(NUM_THREADS);  // 创建线程池
         initState(downloadState);
     }
-    public Downloader(String fileURL, String saveFilePath) {
-        this(fileURL, saveFilePath, NUM_THREADS);
-    }
-    public Downloader(String fileURL, String saveFilePath,int numThreads) {
-        id=fileURL;
-        NUM_THREADS=numThreads;
+    public Downloader(int id,String fileURL, String saveFilePath) {
+        this.id=id;
         this.fileURL = fileURL;
         this.saveFilePath = saveFilePath;
-        this.executor = Executors.newFixedThreadPool(NUM_THREADS);  // 创建线程池
         tasks = new ArrayList<>();
         childFiles = new ArrayList<>();
+        DownloadManager.addDownloader(this);
     }
 
     public void init() throws Exception {
+        File parentFile = new File(saveFilePath).getParentFile();
+        if(parentFile!=null&&!parentFile.exists()){
+            parentFile.mkdirs();
+        }
         long contentLength = getFileSize(fileURL);
         FileFragment fileFragment = new FileFragment(fileURL, 0L, contentLength);
         childFiles.add(fileFragment);
@@ -73,27 +81,29 @@ public class Downloader implements Runnable{
     public final long getFileSize(String u) throws IOException {
         URL url = new URL(u);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        Map<String, List<String>> headerFields = connection.getHeaderFields();
-        System.out.println(headerFields);
         // 获取文件总大小
         long contentLength = 0;
-        //System.out.println(android.os.Build.VERSION.SDK_INT+"  "+android.os.Build.VERSION_CODES.N);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             contentLength = connection.getContentLengthLong();
-        }else {
-            throw new RuntimeException("安卓版本低");
         }
-        System.out.println(contentLength);
+
+        connection.disconnect();
         return contentLength;
     }
 
     public void download(){
         try{
             pauseFlag = false;
-            List<Future<?>> futures = new ArrayList<>();
-            if (tasks.size() > 0) {
-                for (int i = 0; i < tasks.size(); i++) {
-                    futures.add(executor.submit(tasks.get(i)));
+            List<CompletableFuture<Void>> futures = new ArrayList<>();
+            if (!tasks.isEmpty()) {
+                for (DownloadTask task : tasks) {
+                    futures.add(CompletableFuture.runAsync(() -> {
+                        try {
+                            DownloadManager.submit(task).get();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }));
                 }
             } else {
                 init();
@@ -101,20 +111,37 @@ public class Downloader implements Runnable{
                     FileFragment fileFragment = childFiles.get(i);
                     DownloadTask task = new DownloadTask(fileFragment, this, i);
                     tasks.add(task);
-                    futures.add(executor.submit(task));
+                    futures.add(CompletableFuture.runAsync(() -> {
+                        try {
+                            DownloadManager.submit(task).get();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }));
                 }
             }
             // 等待所有线程完成任务
-            for (Future<?> future : futures) {
-                future.get();  // 阻塞直到任务完成
-            }
+            // 所有任务完成后执行回调
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                    .thenRunAsync(() -> {
+                        if(pauseFlag) return;
+                        if(downloadedSize<totalSize&&errorNum<=5){
+                            errorNum++;
+                            download();
+                        }else{
+                            DownloadManager.removeDownloader(id);
+                            this.afterDownload();
+                        }
+                    });
+
+
         }catch (Exception e){
             emitter.emit(downloadedSize,totalSize,e.getMessage());
             e.printStackTrace();
         }finally {
-            if(totalSize!=0) System.out.println("下载:"+fileURL+100*downloadedSize/totalSize+"%");
-            if(!pauseFlag) executor.shutdown();  // 关闭线程池
-            DownloadQueue.map.remove(fileURL);
+            if(totalSize!=0){
+                System.out.println("下载:"+downloadedSize*100/totalSize+"%");
+            }
         }
 
 
@@ -130,8 +157,9 @@ public class Downloader implements Runnable{
         initState(downloadState);
         if(downloadedSize<totalSize) download();
     }
-    private DownloadState saveState() {
+    public DownloadState saveState() {
         DownloadState downloadState = new DownloadState();
+        downloadState.setId(id);
         downloadState.setFileURL(fileURL);
         downloadState.setSaveFilePath(saveFilePath);
         downloadState.setDownloadedSize(downloadedSize);
@@ -145,6 +173,7 @@ public class Downloader implements Runnable{
         return downloadState;
     }
     private void initState(DownloadState downloadState) {
+        this.id=downloadState.getId();
         this.fileURL = downloadState.getFileURL();
         this.saveFilePath = downloadState.getSaveFilePath();
         this.downloadedSize = downloadState.getDownloadedSize();
@@ -154,30 +183,95 @@ public class Downloader implements Runnable{
         List<FileFragment> fragmentList = downloadState.getChildFiles();
         for (int i = 0; i < fragmentList.size(); i++) {
             FileFragment fileFragment = fragmentList.get(i);
+            if(fileFragment.isComplete()) continue;
             DownloadTask task = new DownloadTask(fileFragment, this, i);
             tasks.add(task);
         }
 
     }
 
-    @Override
-    public void run() {
+    public void doDownload(FileFragment fileFragment){
+        try {
+            if(fileFragment.getStartByte()!=null&& fileFragment.getEndByte()!=null){
+                if(fileFragment.getEndByte()-fileFragment.getStartByte()<=0) {
+                    return;
+                }
+            }
+            URL url = new URL(fileFragment.getFileURL());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        download();
+            // 设置 Range 头来指定下载的文件范围
+            if (fileFragment.getStartByte() != null && fileFragment.getEndByte() != null&&!type.equals("default")) {
+                connection.setRequestProperty("Range", "bytes=" + fileFragment.getStartByte() + "-" + fileFragment.getEndByte());
+            }
+            String savePath= fileFragment.getSaveFilePath();
+            if(savePath==null){
+                savePath=saveFilePath;
+            }
+
+            try (InputStream inputStream = connection.getInputStream();
+                 RandomAccessFile partFile = new RandomAccessFile(savePath, "rw")) {
+                partFile.seek(fileFragment.getStartByte());
+
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                long downloadedBytes = 0;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    if (isPauseFlag()) {
+                        System.out.println("Download paused...");
+                        break;
+                    }
+                    partFile.write(buffer, 0, bytesRead);
+                    downloadedBytes += bytesRead;
+                    addDownloadSize(bytesRead);
+                    //System.out.println("hasDownload"+partNumber+">>"+100*fileDownloader.downloadedSize/fileDownloader.totalSize+"%");
+                }
+                //System.out.println("Part " + partNumber +" "+String.valueOf(fileFragment.getEndByte()-fileFragment.getStartByte()) );
+                fileFragment.setStartByte(fileFragment.getStartByte() + downloadedBytes);
+                //System.out.println("Part " + partNumber + " Alldownloaded: " + downloadedBytes + " bytes");
+
+            }
+            connection.disconnect();
+            fileFragment.setComplete(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void afterDownload() {
 
     }
 
     @Override
     public String toString() {
-        return "Downloader{}";
+        return "Downloader{" +
+                "id=" + id +
+                ", fileURL='" + fileURL + '\'' +
+                ", childFiles=" + childFiles +
+                ", saveFilePath='" + saveFilePath + '\'' +
+                ", pauseFlag=" + pauseFlag +
+                ", totalSize=" + totalSize +
+                ", downloadedSize=" + downloadedSize +
+                ", type='" + type + '\'' +
+                ", tasks=" + tasks +
+                ", errorNum=" + errorNum +
+                '}';
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public int getErrorNum() {
+        return errorNum;
+    }
+
+    public void setErrorNum(int errorNum) {
+        this.errorNum = errorNum;
     }
 
     public String getFileURL() {
@@ -210,14 +304,6 @@ public class Downloader implements Runnable{
 
     public void setSaveFilePath(String saveFilePath) {
         this.saveFilePath = saveFilePath;
-    }
-
-    public static int getNumThreads() {
-        return NUM_THREADS;
-    }
-
-    public static void setNumThreads(int numThreads) {
-        NUM_THREADS = numThreads;
     }
 
     public long getTotalSize() {
@@ -258,5 +344,21 @@ public class Downloader implements Runnable{
 
     public void setEmitter(ProgressEmitter emitter) {
         this.emitter = emitter;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public Bridge getBridge() {
+        return bridge;
+    }
+
+    public void setBridge(Bridge bridge) {
+        this.bridge = bridge;
     }
 }

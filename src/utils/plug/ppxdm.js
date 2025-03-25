@@ -171,7 +171,7 @@ async function search(query) {
 }
 async function play(url, option) {
 
-  const res = await fetch(meta.from + url);
+  const res = await fetch(url);
   if (!res || res.status !== 200) throw new Error(meta.name + "请求失败");
   const data = await res.text();
 

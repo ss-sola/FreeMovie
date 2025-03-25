@@ -4,20 +4,24 @@ import java.io.*;
 
 public class FileDownloader extends Downloader{
 
-    public FileDownloader(String fileURL, String saveFilePath,String type) {
-        super(fileURL,saveFilePath);
+    public FileDownloader(int id,String fileURL, String saveFilePath,String type) {
+        super(id,fileURL,saveFilePath);
         this.type=type;
     }
 
     @Override
     public void init() throws IOException {
+        File parentFile = new File(saveFilePath).getParentFile();
+        if(parentFile!=null&&!parentFile.exists()){
+            parentFile.mkdirs();
+        }
         // 获取文件总大小
         long contentLength = getFileSize(fileURL);
         // 划分每个线程下载的文件块大小
-        long partSize = contentLength / NUM_THREADS;
-        for (int i = 0; i < NUM_THREADS; i++) {
+        long partSize = contentLength / DownloadManager.getMaxCore();
+        for (int i = 0; i < DownloadManager.getMaxCore(); i++) {
             long startByte = i * partSize;
-            long endByte = (i == NUM_THREADS - 1) ? contentLength : (startByte + partSize - 1);
+            long endByte = (i == DownloadManager.getMaxCore() - 1) ? contentLength : (startByte + partSize - 1);
             FileFragment fileFragment = new FileFragment(fileURL, startByte, endByte);
             childFiles.add(fileFragment);
         }

@@ -44,9 +44,12 @@ import ButtomControls from './controls/buttom/ButtomControls.vue'
 import LeftControls from './controls/left/LeftControls.vue'
 import RightControls from './controls/right/RightControls.vue'
 import { initPlayer } from '.'
+import { switchVideoSource } from './action'
+
 let player: VideoJsPlayer
-onMounted(() => {
+onMounted(async () => {
   player = initPlayer()
+  // switchVideoSource(await getVideoObjectURL())
 })
 onBeforeUnmount(() => {
   if (player) {

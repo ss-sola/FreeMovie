@@ -7,14 +7,14 @@
     >
       <div class="control-group vertical">
         <span><i class="iconfont icon-airplaytouping"></i></span>
-        <span><i class="iconfont icon-shezhi"></i></span>
+        <span @click="toggleDrawer(true)"><i class="iconfont icon-mti-xiazai2"></i></span>
       </div>
     </div>
   </transition>
 </template>
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { isShowControls } from '../../action'
+import { isShowControls, toggleDrawer } from '../../action'
 </script>
 <style scoped>
 .controls {

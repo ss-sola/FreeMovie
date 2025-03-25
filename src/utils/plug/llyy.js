@@ -100,7 +100,7 @@ async function getDetailData(item) {
 
 const play = async function (url, option) {
 
-    const res = await fetch(meta.from + url, { headers: headers })
+    const res = await fetch(url, { headers: headers })
     if (!res || res.status !== 200) throw new Error(meta.name + '请求失败')
     const data = await res.text()
 

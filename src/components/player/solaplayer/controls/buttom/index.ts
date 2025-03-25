@@ -4,9 +4,7 @@ import { useMovieStore } from '@/stores/movieStore'
 //player.src({ type: 'application/x-mpegURL', src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8' })
 
 
-export function toggleDrawer() {
-    options.showRightDrawer = !options.showRightDrawer
-}
+
 export function nextNumber() {
     const movieStore = useMovieStore().movieStore
     if (!movieStore.activeLine || !movieStore.line) return

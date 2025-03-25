@@ -1,5 +1,5 @@
 
-
+const analysis = require('analysis')
 const meta = {
     name: '风铃动漫',
     available: true,
@@ -172,7 +172,12 @@ function getDocument(text) {
     return doc
 }
 
-
+const play = async function (url, option) {
+    const res = await analysis({ url: url })
+    return {
+        url: res.videoUrl
+    }
+}
 module.exports = {
     author: 'MetaSola',
     name: meta.name,
@@ -183,4 +188,5 @@ module.exports = {
     initRotationData: initRotationData,
     getDetailData: getDetailData,
     search: search,
+    play: play
 };

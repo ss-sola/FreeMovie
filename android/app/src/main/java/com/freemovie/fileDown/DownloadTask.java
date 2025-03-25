@@ -22,53 +22,7 @@ class DownloadTask implements Runnable {
 
     @Override
     public void run() {
-        try {
-            System.out.println("Part " + partNumber + " started from " + fileFragment.getStartByte() + " to " + fileFragment.getEndByte());
-            if(fileFragment.getStartByte()!=null&& fileFragment.getEndByte()!=null){
-                if(fileFragment.getEndByte()-fileFragment.getStartByte()<=0) {
-                    System.out.println("Part " + partNumber + " already downloaded");
-                    return;
-                }
-                System.out.println("---------"+partNumber);
-            }
-            URL url = new URL(fileFragment.getFileURL());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            // 设置 Range 头来指定下载的文件范围
-            if (fileFragment.getStartByte() != null && fileFragment.getEndByte() != null) {
-                connection.setRequestProperty("Range", "bytes=" + fileFragment.getStartByte() + "-" + fileFragment.getEndByte());
-            }
-            String savePath= fileFragment.getSaveFilePath();
-            if(savePath==null){
-                savePath=fileDownloader.getSaveFilePath();
-            }
-
-            try (InputStream inputStream = connection.getInputStream();
-                 RandomAccessFile partFile = new RandomAccessFile(savePath, "rw")) {
-                partFile.seek(fileFragment.getStartByte());
-
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                long downloadedBytes = 0;
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    if (fileDownloader.isPauseFlag()) {
-                        System.out.println("Download paused...");
-                        break;
-                    }
-                    partFile.write(buffer, 0, bytesRead);
-                    downloadedBytes += bytesRead;
-                    fileDownloader.addDownloadSize(bytesRead);
-                    //System.out.println("hasDownload"+partNumber+">>"+100*fileDownloader.downloadedSize/fileDownloader.totalSize+"%");
-                }
-                System.out.println("Part " + partNumber +" "+String.valueOf(fileFragment.getEndByte()-fileFragment.getStartByte()) );
-                fileFragment.setStartByte(fileFragment.getStartByte() + downloadedBytes);
-                System.out.println("Part " + partNumber + " Alldownloaded: " + downloadedBytes + " bytes");
-
-            }
-            connection.disconnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileDownloader.doDownload(fileFragment);
     }
 
     @Override

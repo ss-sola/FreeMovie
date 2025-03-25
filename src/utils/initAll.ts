@@ -30,8 +30,8 @@ export const initAll = async () => {
   await initTables()
   //加载插件
   await initPluginModules()
-  //关闭连接(或许不必关闭)
-  closeConnection(IConfig.Database)
+  // //关闭连接(或许不必关闭)
+  // closeConnection(IConfig.Database)
 
   console.timeEnd('initAll')
 }

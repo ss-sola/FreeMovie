@@ -2,7 +2,12 @@
   <div
     class="overlay"
     v-show="options.showRightDrawer"
-    @click="options.showRightDrawer = !options.showRightDrawer"
+    @click="
+      () => {
+        options.showRightDrawer = !options.showRightDrawer
+        options.isDownLoad = !options.isDownLoad
+      }
+    "
   ></div>
   <div class="drawer right-drawer" :class="{ 'drawer-visible': options.showRightDrawer }">
     <div class="drawer-content">
@@ -26,13 +31,17 @@
         <span
           class="episode-item"
           :class="{
-            'active-number': movieStore.activeNumber == item.html && key == movieStore.activeLine
+            'active-number':
+              movieStore.activeNumber == item.html &&
+              key == movieStore.activeLine &&
+              !options.isDownLoad
           }"
           v-for="(item, index) in value.total"
           :key="index"
           @click="handleNumberClick(key, item.html)"
-          >{{ item.html }}</span
-        >
+          >{{ item.html }}
+          <i v-show="options.isDownLoad" class="iconfont icon-mti-xiazai2 xiazai-mini"></i>
+        </span>
       </div>
     </div>
   </div>
@@ -41,6 +50,7 @@
 import { ref, reactive, type Ref } from 'vue'
 import { options } from '../index'
 import { useMovieStore } from '@/stores/movieStore'
+import { download } from '@/service/download'
 
 const movieStore = useMovieStore().movieStore
 const selectedLine: Ref<string | number, string | number> = ref('')
@@ -49,6 +59,10 @@ function handleLineClick(key: string | number) {
   selectedLine.value = key
 }
 function handleNumberClick(key: string | number, number: string) {
+  if (options.isDownLoad) {
+    download(key as string, number)
+    return
+  }
   movieStore.activeLine = key as string
   movieStore.activeNumber = number
 }
@@ -144,6 +158,17 @@ function handleNumberClick(key: string | number, number: string) {
   background-color: rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition: background-color 0.3s ease;
+  position: relative;
+}
+.xiazai-mini {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 0.5em;
+}
+/* 鼠标悬停时样式 */
+.episode-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* 滚动条整体样式 */

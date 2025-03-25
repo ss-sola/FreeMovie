@@ -111,7 +111,7 @@ public class WebViewHelper {
                 String contentType = getContentType(videoUrl);
                 Log.d(TAG, "Content-Type: " + contentType+"  videoUrl:"+videoUrl);
 
-                if (videoContentTypes.contains(contentType)||(isVideoUrl(videoUrl)&& "text/html; charset=utf-8".equals(contentType) )) {
+                if (videoContentTypes.contains(contentType)) {
                     isVideoFound = true;  // 标记已找到
                     mainHandler.removeCallbacks(timeoutRunnable);  // 移除超时任务
 
@@ -163,13 +163,14 @@ public class WebViewHelper {
     private String getContentType(String url) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setRequestMethod("HEAD");
+            //connection.setRequestMethod("HEAD");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             connection.connect();
 
             Map<String, List<String>> headers = connection.getHeaderFields();
+            connection.disconnect();
             if (headers.containsKey("Content-Type")) {
                 return headers.get("Content-Type").get(0);
             }

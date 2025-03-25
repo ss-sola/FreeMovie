@@ -10,6 +10,8 @@ class FileFragment {
     //如果片段文件不作为单独文件可不设置
     String saveFilePath;
 
+    boolean isComplete;
+
     public FileFragment(String fileURL, Long startByte, Long endByte) {
         this.fileURL = fileURL;
         this.startByte = startByte;
@@ -22,6 +24,11 @@ class FileFragment {
     public FileFragment(String fileURL, Long startByte) {
         this.fileURL = fileURL;
         this.startByte = startByte;
+    }
+
+    public FileFragment(String fileURL, String saveFilePath) {
+        this.fileURL = fileURL;
+        this.saveFilePath = saveFilePath;
     }
 
     public String getFileURL() {
@@ -62,6 +69,14 @@ class FileFragment {
 
     public void setSaveFilePath(String saveFilePath) {
         this.saveFilePath = saveFilePath;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
     }
 
     @Override

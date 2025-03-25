@@ -13,6 +13,11 @@
             <h3>插件管理</h3>
           </ion-label>
         </ion-item>
+        <ion-item @click="GRouter.toFolder()" :detail="true">
+          <ion-label>
+            <h3>下载管理</h3>
+          </ion-label>
+        </ion-item>
         <ion-item @click="GRouter.toAbout()" :detail="true">
           <ion-label>
             <h3>关于</h3>

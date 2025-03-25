@@ -52,26 +52,19 @@ const doPlay = async () => {
   Object.assign(options, movieStore)
   let playData = {} as IPlugin.IMoiveSourceResult
 
-  let url = getUrl(options)
-  let movieHash = store.movieHash
   const plugin = pluginMap[movieStore.pluginId]
-  if (!url.startsWith('http')) {
-    url = plugin.from + url
-  }
+  let url = getUrl(options, plugin.from)
+  let movieHash = store.movieHash
+
+
 
   try {
-    const promises = [analysisPlatData(url)]
-    if (plugin && plugin.play) {
-      promises.push(plugin.play(url, options))
-    }
-    console.log(movieHash)
-    playData = await Promise.any(promises)
-    console.log(2)
+    playData = await plugin.play(url, options)
     if (store.movieHash != movieHash) {
       console.log("取消播放", movieHash, store.movieHash)
       return playData
     }
-    if (!playData.url) {
+    if (!playData.url && store.movieHash == movieHash) {
       throw new Error('获取播放地址失败')
     }
   } catch (error) {
@@ -88,31 +81,35 @@ const doPlay = async () => {
   movieStore.type = playData.type
   return playData
 
-  function getUrl(options: IMovie.IMovieSource) {
-    let url = ''
-    try {
-      const lineItem = options.line as IMovie.ILineItem
-      const activeLine = options.activeLine as string
-      const total = lineItem[activeLine].total
-      for (let i = 0; i < total.length; i++) {
-        if (total[i].html == options.activeNumber) {
-          url = total[i].href
-          break;
-        }
+
+}
+function getUrl(options: IMovie.IMovieSource, from?: string) {
+  let url = ''
+  try {
+    const lineItem = options.line as IMovie.ILineItem
+    const activeLine = options.activeLine as string
+    const total = lineItem[activeLine].total
+    for (let i = 0; i < total.length; i++) {
+      if (total[i].html == options.activeNumber) {
+        url = total[i].href
+        break;
       }
-    } catch (e) { }
-    return url
+    }
+  } catch (e) { }
+  if (!url.startsWith('http')) {
+    url = from + url
   }
-  async function analysisPlatData(url: string) {
-    return new Promise<IPlugin.IMoiveSourceResult>(async (resolve, reject) => {
-      const res = await analysis({ url: url })
-      if (!res.videoUrl) reject()
-      const data = {
-        url: res.videoUrl
-      } as IPlugin.IMoiveSourceResult
-      resolve(data)
-    })
-  }
+  return url
+}
+async function analysisPlayData(url: string) {
+  return new Promise<IPlugin.IMoiveSourceResult>(async (resolve, reject) => {
+    const res = await analysis({ url: url })
+    if (!res.videoUrl) reject()
+    const data = {
+      url: res.videoUrl
+    } as IPlugin.IMoiveSourceResult
+    resolve(data)
+  })
 }
 
 function filterSearchResult(resData: IMovie.IMovieBase[]) {
@@ -127,4 +124,4 @@ function filterSearchResult(resData: IMovie.IMovieBase[]) {
     )
   })
 }
-export { doSearch, doPlay }
+export { doSearch, doPlay, getUrl, analysisPlayData }

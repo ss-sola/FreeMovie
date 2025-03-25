@@ -1,6 +1,9 @@
 import { CapacitorHttp } from '@capacitor/core'
 import { globalProxy } from '@/utils/safeRunContext'
 import { analysis } from '@/plugin/webView'
+import { proxyImg } from '@/utils/static'
+import { Filesystem, Directory } from '@capacitor/filesystem';
+
 import CryptoJS from 'crypto-js'
 
 export const IConfig = {
@@ -35,29 +38,11 @@ export const IConfig = {
     ErrorGet: '获取播放地址失败',
     ErrorPlay: '播放失败'
   },
-  safeWindow: globalProxy
+  safeWindow: globalProxy,
+  basePath: (await Filesystem.getUri({
+    path: "",
+    directory: Directory.Documents,
+  })).uri.substring(5)
 }
 
 
-async function proxyImg(url: string) {
-  return new Promise(async (resolve, reject) => {
-
-    const response = await CapacitorHttp.get({
-      url: url,
-      headers: {
-        Referer: url,
-      },
-      responseType: 'arraybuffer',
-      disableRedirects: false // 确保跟随重定向
-    })
-    // 检查状态码
-    if (response.status === 301 || response.status === 302) {
-      const newUrl = response.headers['Location'];
-      if (newUrl) {
-        resolve(await proxyImg(newUrl)); // 递归调用，请求新URL
-      }
-    }
-    const arrayBuffer = response.data;
-    resolve(`data:image/jpeg;base64,${arrayBuffer}`)
-  })
-}

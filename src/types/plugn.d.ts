@@ -44,7 +44,7 @@ declare namespace IPlugin {
     /**搜索 */
     search?: (query: string, page?: number) => Promise<ISearchResult>
     /**播放 */
-    play?: (url: string, movieItem: IMovie.IMovieSource) => Promise<IMoiveSourceResult>
+    play: (url: string, movieItem: IMovie.IMovieSource) => Promise<IMoiveSourceResult>
   }
   export type pluginMoudleKey = keyof IPlugin.IPluginModule
   interface IPluginModule extends IPluginDefine {

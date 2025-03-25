@@ -40,6 +40,9 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+//    implementation 'com.arthenica:ffmpeg-kit-full:5.1'
+//    implementation 'com.arthenica:mobile-ffmpeg-min:4.4'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 apply from: 'capacitor.build.gradle'

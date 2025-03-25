@@ -1,4 +1,5 @@
 import { CapacitorSQLite } from '@capacitor-community/sqlite'
+import { initFolder } from './folder'
 
 export const initTables = async () => {
   //创建插件表
@@ -8,12 +9,13 @@ export const initTables = async () => {
       table: IConfig.TableName.Plugin
     })
   ).result
-  if (isTableExists) {
-    return
+  if (!isTableExists) {
+    await CapacitorSQLite.run({
+      database: IConfig.Database,
+      statement: `CREATE TABLE IF NOT EXISTS ${IConfig.TableName.Plugin} (id INTEGER PRIMARY KEY AUTOINCREMENT,version TEXT, name TEXT, content TEXT,url TEXT,enable BOOLEAN DEFAULT 1)`,
+      values: []
+    })
   }
-  await CapacitorSQLite.run({
-    database: IConfig.Database,
-    statement: `CREATE TABLE IF NOT EXISTS ${IConfig.TableName.Plugin} (id INTEGER PRIMARY KEY AUTOINCREMENT,version TEXT, name TEXT, content TEXT,url TEXT,enable BOOLEAN DEFAULT 1)`,
-    values: []
-  })
+
+  await initFolder()
 }

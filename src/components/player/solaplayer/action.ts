@@ -140,3 +140,8 @@ export function secondsToTime(seconds: number | undefined) {
     }
     return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`
 }
+
+export function toggleDrawer(isDownLoad: boolean = false) {
+    options.showRightDrawer = !options.showRightDrawer
+    options.isDownLoad = isDownLoad
+}

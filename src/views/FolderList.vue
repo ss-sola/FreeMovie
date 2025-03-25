@@ -2,28 +2,24 @@
   <IonPage>
     <IonContent>
       <div class="page-header">
-        <IonButton v-if="hasParent" fill="clear" @click="router.back()">
-          <IonIcon name="arrow-back-outline" slot="start"></IonIcon>
+        <IonButton fill="clear" @click="router.back()">
           <p>返回</p>
         </IonButton>
         <h1>{{ folderName }}</h1>
-
-        <IonButton @click="createNewFolder">新建</IonButton>
+        <!-- <IonButton fill="clear" @click="createNewFolder">新建</IonButton> -->
       </div>
 
-      <IonList>
+      <IonList v-if="childFolders.length > 0">
         <IonItem
           v-for="folder in childFolders"
           :key="folder.id"
-          button
           @click="navigateToFolder(folder.id, folder.name)"
         >
           <IonLabel>{{ folder.name }}</IonLabel>
-          <IonIcon slot="end" name="chevron-forward-outline"></IonIcon>
         </IonItem>
       </IonList>
 
-      <VideoDownloadManager v-if="hasParent" :folderId="currentFolderId" />
+      <VideoDownload v-if="hasParent" :folderId="currentFolderId" />
     </IonContent>
   </IonPage>
 </template>
@@ -31,17 +27,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { IonPage, IonItem, IonLabel, IonCheckbox, IonContent } from '@ionic/vue'
-
-import { getSubFolders, addFolder, initializeDatabase, getAllFolders } from '@/sqlite/folder'
-import VideoDownloadManager from '@/components/folder-list/VideoDownloadManager.vue'
+import { IonPage, IonItem, IonLabel, IonContent, IonIcon, IonList, IonButton } from '@ionic/vue'
+import { getSubFolders, addFolder, getAllFolders } from '@/sqlite/folder'
+import VideoDownload from '@/components/folder-list/VideoDownload.vue'
 import type { Folder, Video } from '@/types/download'
 
 const route = useRoute()
 const router = useRouter()
 const currentFolderId = ref(Number(route.params.id))
 const childFolders = ref<Folder[]>([])
-console.log(route.params)
 // 当前文件夹名称
 const folderName = computed(() => (route.params.folderName ? route.params.folderName : '根文件夹'))
 
@@ -59,8 +53,7 @@ const createNewFolder = async () => {
 
 // 加载当前文件夹数据
 const fetchFolder = async () => {
-  console.log(currentFolderId.value)
-  childFolders.value = await getSubFolders(currentFolderId.value)
+  childFolders.value = await getSubFolders(currentFolderId.value || 0)
 }
 // 进入子文件夹
 const navigateToFolder = (folderId: number, name: string) => {
@@ -68,9 +61,7 @@ const navigateToFolder = (folderId: number, name: string) => {
 }
 // 初始化
 onMounted(async () => {
-  await initializeDatabase()
   await fetchFolder() // 加载当前文件夹数据
-  // console.log(await getAllFolders())
 })
 </script>
 

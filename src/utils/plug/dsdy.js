@@ -106,7 +106,7 @@ async function getDetailData(item) {
 }
 
 const play = async function (url, option) {
-    const res = await analysis({ url: meta.from + url })
+    const res = await analysis({ url: url })
     return {
         url: res.videoUrl
     }

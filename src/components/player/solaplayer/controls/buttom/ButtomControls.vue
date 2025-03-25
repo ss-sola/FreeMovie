@@ -19,7 +19,7 @@
       </div>
       <div class="control-group right">
         <span @click="switchSpeed">x{{ options.playbackRate }}</span>
-        <span @click="toggleDrawer">选集</span>
+        <span @click="toggleDrawer()">选集</span>
         <span @click="toggleFullScreen">
           <i
             class="iconfont"
@@ -36,9 +36,9 @@
 </template>
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { isShowControls, toggleFullScreen, togglePlay } from '../../action'
+import { isShowControls, toggleFullScreen, togglePlay, toggleDrawer } from '../../action'
 import { options } from '../../index'
-import { toggleDrawer, switchSpeed, nextNumber, beforeNumber } from './index'
+import { switchSpeed, nextNumber, beforeNumber } from './index'
 </script>
 <style scoped>
 .controls {

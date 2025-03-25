@@ -1,6 +1,9 @@
 package com.freemovie.fileDown;
 
-import com.getcapacitor.plugin.util.HttpRequestHandler;
+import android.content.Context;
+import android.util.Log;
+
+import com.getcapacitor.Bridge;
 
 /**
  * @author Lijh
@@ -10,53 +13,67 @@ import com.getcapacitor.plugin.util.HttpRequestHandler;
  */
 public class DownloadService {
 
+    private Context context;
 
+    private Bridge bridge;
+    public DownloadService(Context context, Bridge bridge) {
+        this.context=context;
+        this.bridge=bridge;
+    }
 
-    public void download(String url, String savePath) {
-        Downloader downloader = getDownloader(url, savePath, "");
-        DownloadQueue.addTask(downloader);
+    public void download(int id,String url, String savePath) {
+        Downloader downloader = getDownloader(id,url, savePath, "");
+        downloader.download();
 
     }
-    public void download(String url, String savePath, String type) {
-        Downloader downloader = getDownloader(url, savePath, type);
-        DownloadQueue.addTask(downloader);
+    public void download(int id,String url, String savePath, String type) {
+        Downloader downloader = getDownloader(id,url, savePath, type);
+        downloader.download();
 
     }
-    public void download(String url, String savePath, String type,ProgressEmitter emitter) {
-        Downloader downloader = getDownloader(url, savePath, type);
+    public void download(int id,String url, String savePath, String type,ProgressEmitter emitter) {
+        Downloader downloader = getDownloader(id,url, savePath, type);
         downloader.setEmitter(emitter);
-        DownloadQueue.addTask(downloader);
+        downloader.download();
 
     }
 
-    public DownloadState pause(String url) {
-        Downloader task = DownloadQueue.getTask(url);
+    public DownloadState pause(int id) {
+        Downloader task = DownloadManager.getDownloader(id);
         if (task == null) throw new RuntimeException("任务不存在");
         return task.pause();
     }
 
-    public void resume(DownloadState downloadState) throws Exception {
-        Downloader downloader = getDownloader(downloadState.getFileURL(), downloadState.getSaveFilePath(), downloadState.getType());
+    public void resume(DownloadState downloadState,ProgressEmitter emitter) throws Exception {
+        Downloader downloader = getDownloader(downloadState.getId(),downloadState.getFileURL(), downloadState.getSaveFilePath(), downloadState.getType());
+        downloader.setEmitter(emitter);
         downloader.resume(downloadState);
     }
+    public DownloadState saveState(int id) {
+        Downloader task = DownloadManager.getDownloader(id);
+        if (task == null) throw new RuntimeException("任务不存在");
+        return task.saveState();
+    }
 
-    private Downloader getDownloader(String url, String savePath, String type) {
+    private Downloader getDownloader(int id,String url, String savePath, String type) {
         Downloader downloader;
         switch (type) {
             case "file":
-                downloader = new FileDownloader(url, savePath, type);
+                downloader = new FileDownloader(id,url, savePath, type);
                 break;
             case "m3u8":
-                downloader = new M3U8Downloader(url, savePath, type);
+                downloader = new M3U8Downloader(id,url, savePath, type);
                 break;
             default:
-                downloader = new Downloader(url, savePath);
+                downloader = new Downloader(id,url, savePath);
         }
+        downloader.setContext(context);
+        downloader.setBridge(bridge);
+        Log.d("context", context.toString());
+        Log.d("bridge", bridge.toString());
 
         return downloader;
     }
 
-    public void addTask(Runnable runnable){
-        DownloadQueue.add(runnable);
-    }
+
 }

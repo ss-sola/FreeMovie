@@ -17,6 +17,7 @@ const options = reactive({
     showBrightness: false,
     showProgress: false,
     showControls: false,
+    isDownLoad: false,
     isMuted: false,
     isFullScreen: false,
     isLocked: false,

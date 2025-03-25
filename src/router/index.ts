@@ -32,7 +32,7 @@ const router = createRouter({
       component: () => import('@/views/About.vue')
     },
     {
-      path: '/FolderList',
+      path: '/folderList/:id/:folderName',
       name: 'FolderList',
       component: () => import('@/views/FolderList.vue')
     },
