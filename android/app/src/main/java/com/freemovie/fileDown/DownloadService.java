@@ -45,6 +45,9 @@ public class DownloadService {
     }
 
     public void resume(DownloadState downloadState,ProgressEmitter emitter) throws Exception {
+        if(downloadState==null||downloadState.getId()==null){
+            throw new RuntimeException("任务不存在");
+        }
         Downloader downloader = getDownloader(downloadState.getId(),downloadState.getFileURL(), downloadState.getSaveFilePath(), downloadState.getType());
         downloader.setEmitter(emitter);
         downloader.resume(downloadState);
@@ -58,10 +61,11 @@ public class DownloadService {
     private Downloader getDownloader(int id,String url, String savePath, String type) {
         Downloader downloader;
         switch (type) {
-            case "file":
+            case "video/mp4":
                 downloader = new FileDownloader(id,url, savePath, type);
                 break;
-            case "m3u8":
+            case "application/x-mpegURL":
+            case "application/vnd.apple.mpegurl":
                 downloader = new M3U8Downloader(id,url, savePath, type);
                 break;
             default:

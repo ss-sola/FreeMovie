@@ -45,4 +45,4 @@ const doSqlteHook = async (func: Function, ...args: any[]) => {
     return res
   }
 }
-export { createConnection, closeConnection, doSqlteHook }
+export { createConnection, closeConnection }

@@ -20,30 +20,33 @@ function removeVideos(id: number) {
 const toggleDownload = async (videoId: number) => {
     const video = videos.find((v) => v.id === videoId)
     if (!video) return
+
     if (video.isCompleted) {
         console.log('已下载完成')
         nativeToPlay(video)
         return
     } else if (video.isDownloading) {
-        video.isDownloading = false
         video.data = (await Downloader.pause({ id: video.id })).downloadState
+        video.isDownloading = false
         updateVideo(video)
-        console.log(video)
+        Toast("暂停下载")
     } else {
+        await Downloader.resume({ downloadState: video.data })
         video.isDownloading = true
-        Downloader.resume({ downloadState: video.data })
-        console.log(video)
+        Toast("开始下载")
     }
     saveState(video)
 }
 
 async function nativeToPlay(video: Video) {
     const url = await getVideoObjectURL(video.path)
-    switchVideoSource(url)
-    GRouter.toPlay()
+    await GRouter.toPlay()
+    switchVideoSource(url, video.type)
+
 }
 export {
     pushVideos,
+    nativeToPlay,
     removeVideos,
     toggleDownload
 }

@@ -1,7 +1,7 @@
 import { initTables } from '@/sqlite/init'
 import { initPluginModules } from '@/service/plugin'
 import { createConnection, closeConnection } from '@/sqlite/commen'
-import { IConfig } from '@/utils/config'
+import { getIConfig } from '@/utils/config'
 import { Capacitor } from '@capacitor/core'
 import { toastController } from '@ionic/vue'
 import type { ToastOptions } from '@ionic/core/dist/types/components/toast/toast-interface'
@@ -20,7 +20,7 @@ async function Toast(msg: string, options?: ToastOptions) {
 
 export const initAll = async () => {
   console.time('initAll')
-  window.IConfig = IConfig
+  window.IConfig = await getIConfig()
   window.Toast = Toast
   initVolumeControl()
   initFetch()

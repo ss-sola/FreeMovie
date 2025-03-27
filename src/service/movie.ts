@@ -3,6 +3,7 @@ import { useSearchStore } from '@/stores/searchStore'
 import { putPluginIdToBase } from '@/service/plugin'
 import { useMovieStore } from '@/stores/movieStore'
 import { analysis } from '@/plugin/webView'
+import { formatStr } from '@/utils/static'
 const titleFilter = ['电影解说']
 const tagFilter = ['未播放']
 const filter = { title: titleFilter, tag: tagFilter }
@@ -122,6 +123,9 @@ function filterSearchResult(resData: IMovie.IMovieBase[]) {
         return !item.tag?.includes(tag)
       })
     )
+  }).map((item) => {
+    item.title = formatStr(item.title)
+    return item
   })
 }
 export { doSearch, doPlay, getUrl, analysisPlayData }

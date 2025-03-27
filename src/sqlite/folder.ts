@@ -46,9 +46,10 @@ export const initFolder = async () => {
                 path TEXT,
                 url TEXT,
                 movieHash TEXT,
+                data TEXT,
                 fromName TEXT,
                 progress INTEGER DEFAULT 0,
-                isDownloading BOOLEAN DEFAULT 0,
+                isDownloading BOOLEAN DEFAULT 1,
                 isCompleted BOOLEAN DEFAULT 0,
                 createdAt TEXT DEFAULT CURRENT_TIMESTAMP
             
@@ -167,9 +168,9 @@ export const updateVideo = async (video: Video): Promise<number> => {
         const res = await CapacitorSQLite.run({
             database: IConfig.Database,
             statement: `
-            UPDATE Video SET progress=?,isDownloading=?,isCompleted=? WHERE id = ?;
+            UPDATE Video SET progress=?,isDownloading=?,isCompleted=?,data=? WHERE id = ?;
             `,
-            values: [video.progress, video.isDownloading, video.isCompleted, video.id],
+            values: [video.progress, video.isDownloading, video.isCompleted, video.data, video.id],
         });
         return res.changes?.changes || 0;
     }
@@ -177,4 +178,52 @@ export const updateVideo = async (video: Video): Promise<number> => {
         console.error('Error updating video:', error);
         return 0;
     }
+}
+
+async function deleteBatchVideos(ids: number[]) {
+    if (ids.length === 0) return 0;
+    try {
+        const res = await CapacitorSQLite.run({
+            database: IConfig.Database,
+            statement: `
+            DELETE FROM Video WHERE id IN (${ids.map(() => '?').join(',')});
+            `,
+            values: ids,
+        });
+        return res.changes?.changes || 0;
+    } catch (error) {
+        console.error('Error deleting videos:', error);
+        return 0;
+    }
+}
+
+async function deleteBatchFolders(ids: number[]) {
+    if (ids.length === 0) return 0;
+    try {
+
+        await CapacitorSQLite.run({
+            database: IConfig.Database,
+            statement: `
+            DELETE FROM Video WHERE folderId IN (${ids.map(() => '?').join(',')});
+            `,
+            values: ids,
+        });
+        const res = await CapacitorSQLite.run({
+            database: IConfig.Database,
+            statement: `
+            DELETE FROM Folder WHERE id IN (${ids.map(() => '?').join(',')});
+            `,
+            values: ids,
+        });
+
+        return res.changes?.changes || 0;
+    } catch (error) {
+
+        console.error('Error deleting folders:', error);
+        return 0;
+    }
+}
+export {
+    deleteBatchVideos,
+    deleteBatchFolders
 }

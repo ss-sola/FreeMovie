@@ -1,5 +1,7 @@
 import { Filesystem, Directory } from '@capacitor/filesystem'
 import { Capacitor } from '@capacitor/core';
+import type { Folder, Video } from '@/types/download';
+import { deleteBatchVideos, deleteBatchFolders } from '@/sqlite/folder'
 async function getVideoObjectURL(path: string) {
     try {
         if (path.endsWith('mp4')) {
@@ -50,6 +52,53 @@ async function getVideoObjectURL(path: string) {
     }
 }
 
+async function deleteVideos(videos: Video[]) {
+    for (const video of videos) {
+        //检查文件是否存在
+        try {
+            await Filesystem.deleteFile({
+                path: video.path,
+                directory: Directory.Documents
+            })
+        } catch (error) {
+
+        }
+        try {
+            await Filesystem.rmdir({
+                path: video.path + `/${getFileName(video.path)}`,
+                directory: Directory.Documents,
+                recursive: true, // 递归删除
+            });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+    const ids = videos.map(item => item.id)
+    await deleteBatchVideos(ids)
+}
+
+async function deleteFolders(folders: Folder[]) {
+    for (const folder of folders) {
+        try {
+            await Filesystem.rmdir({
+                path: folder.name,
+                directory: Directory.Documents,
+                recursive: true, // 递归删除
+            });
+        } catch (error) {
+
+        }
+    }
+    const ids = folders.map(item => item.id)
+    await deleteBatchFolders(ids)
+
+}
+function getFileName(path: string) {
+    return path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'))
+}
 export {
-    getVideoObjectURL
+    getVideoObjectURL,
+    deleteVideos,
+    deleteFolders
 }

@@ -11,6 +11,7 @@ import android.util.Log;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -44,7 +45,11 @@ public class M3U8Downloader extends Downloader {
         return path.substring(path.lastIndexOf("/")+1,path.lastIndexOf("."));
     }
     private String getFullFileName(String path){
-        return path.substring(path.lastIndexOf("/")+1);
+        int end=path.length();
+        if(path.contains("?")){
+            end=path.indexOf("?");
+        }
+        return path.substring(path.lastIndexOf("/")+1,end);
     }
     @Override
     public void doDownload(FileFragment fileFragment) {
@@ -61,6 +66,7 @@ public class M3U8Downloader extends Downloader {
             int responseCode = httpConn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
                 System.out.println("No file to download. Server returned HTTP response code: " + responseCode);
+                System.out.println("url: " + u);
                 return;
             }
             try(
@@ -163,8 +169,6 @@ public class M3U8Downloader extends Downloader {
     public  List<String> parseM3U8(String m3u8Url) throws IOException {
         List<String> tsUrls = new ArrayList<>();
         URL url = new URL(m3u8Url);
-        String suf=m3u8Url.substring(0,m3u8Url.lastIndexOf("/")+1);
-        System.out.println(suf);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
         File file = new File(saveFilePath);
@@ -183,9 +187,7 @@ public class M3U8Downloader extends Downloader {
                 writer.newLine(); // 保持原始换行符
                 continue;
             }
-            if(!line.startsWith("http")){
-                line=suf+line;
-            }
+            line=resolveUrl(m3u8Url,line);
             if(line.endsWith("m3u8")){
                 m3u8List.add(line);
             }else{
@@ -202,26 +204,26 @@ public class M3U8Downloader extends Downloader {
         return tsUrls;
     }
 
-    public static void deleteFolder(String path) throws IOException {
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
-        Path folderPath = Paths.get(path);
-
-        Files.walkFileTree(folderPath, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
+    public static String resolveUrl(String baseUrl, String tsPath) {
+        try {
+            // 如果是完整的 URL，直接返回
+            if (tsPath.startsWith("http")) {
+                return tsPath;
             }
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+            URL base = new URL(baseUrl);
 
-        System.out.println("删除成功：" + folderPath);
+            // 处理绝对路径（以 / 开头）
+            if (tsPath.startsWith("/")) {
+                return base.getProtocol() + "://" + base.getHost() + tsPath;
+            }
+
+            // 处理相对路径（../ 和 ./）
+            return new URL(base, tsPath).toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
 }

@@ -7,19 +7,15 @@ import { addFolder, addVideo } from '@/sqlite/folder'
 import { Downloader } from '@/plugin/downloader'
 import type { Video } from '@/types/download';
 import { pushVideos } from '@/components/folder-list/action';
-import { videoUrlMap } from '@/components/folder-list';
-import { updateVideo } from '@/sqlite/folder'
+
 
 const typeMap: Record<string, string> = {
     'video/mp4': '.mp4',
     'video/webm': '.webm',
     'application/x-mpegURL': '.m3u8',
+    'application/vnd.apple.mpegurl': '.m3u8'
 }
-const tranTypeMap: Record<string, string> = {
-    'video/mp4': 'mp4',
-    'video/webm': '',
-    'application/x-mpegURL': 'm3u8',
-}
+
 
 async function download(activeLine: string, activeNumber: string) {
     const states = await Filesystem.checkPermissions()
@@ -53,6 +49,7 @@ async function download(activeLine: string, activeNumber: string) {
         img: options.img,
         path: path,
         url: playData.url,
+        type: playData.type,
         movieHash: getMovieHash(options),
         fromName: options.platform,
         progress: 0,
@@ -69,14 +66,14 @@ async function download(activeLine: string, activeNumber: string) {
             id: videoObj.id,
             url: decodeURIComponent(playData.url || ""),
             savePath: filePath.replaceAll(" ", ""),
-            type: tranTypeMap[playData.type || ""],
+            type: playData.type,
             progress: true
         }
     )
     console.log("开始下载", {
         url: decodeURIComponent(playData.url || ""),
         savePath: filePath.replaceAll(" ", ""),
-        type: tranTypeMap[playData.type || ""],
+        type: playData.type,
         progress: true
     })
     Toast("开始下载")
@@ -113,7 +110,7 @@ function resolveFilePath(path: string) {
 function getPath(folderName: string, options: IMovie.IMovieSource, playData: IPlugin.IMoiveSourceResult) {
     playData.type = playData.type || 'video/mp4'
     folderName = folderName.replaceAll(" ", "")
-    console.log({ u: resolveFileName(options) })
+    console.log(playData)
     return `${folderName}/${resolveFileName(options)}${typeMap[playData.type]}`
 }
 

@@ -1,115 +1,115 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 4199191 */
-  src: url('iconfont.woff2?t=1742349550145') format('woff2'),
-       url('iconfont.woff?t=1742349550145') format('woff'),
-       url('iconfont.ttf?t=1742349550145') format('truetype');
+  font-family: 'iconfont'; /* Project id 4199191 */
+  src:
+    url('iconfont.woff2?t=1742349550145') format('woff2'),
+    url('iconfont.woff?t=1742349550145') format('woff'),
+    url('iconfont.ttf?t=1742349550145') format('truetype');
 }
 
 .iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
+  font-family: 'iconfont' !important;
+  font-size: 1em;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .icon-mti-xiazai2:before {
-  content: "\e92c";
+  content: '\e92c';
 }
 
 .icon-24gf-backward:before {
-  content: "\ea78";
+  content: '\ea78';
 }
 
 .icon-24gf-forward:before {
-  content: "\ea7c";
+  content: '\ea7c';
 }
 
 .icon-bofang2:before {
-  content: "\e63a";
+  content: '\e63a';
 }
 
 .icon-liangdu:before {
-  content: "\e612";
+  content: '\e612';
 }
 
 .icon-a-mti-yinliangmti-yuyinshi:before {
-  content: "\e908";
+  content: '\e908';
 }
 
 .icon-fanhui1:before {
-  content: "\e64e";
+  content: '\e64e';
 }
 
 .icon-shezhi:before {
-  content: "\e643";
+  content: '\e643';
 }
 
 .icon-bofang:before {
-  content: "\e63d";
+  content: '\e63d';
 }
 
 .icon-quanping:before {
-  content: "\ec13";
+  content: '\ec13';
 }
 
 .icon-prev:before {
-  content: "\e600";
+  content: '\e600';
 }
 
 .icon-airplaytouping:before {
-  content: "\e6cd";
+  content: '\e6cd';
 }
 
 .icon-xiaoping:before {
-  content: "\e601";
+  content: '\e601';
 }
 
 .icon-xiayiji:before {
-  content: "\e602";
+  content: '\e602';
 }
 
 .icon-mti-jiemi:before {
-  content: "\e94b";
+  content: '\e94b';
 }
 
 .icon-mti-mima:before {
-  content: "\e94d";
+  content: '\e94d';
 }
 
 .icon-wode1:before {
-  content: "\e63c";
+  content: '\e63c';
 }
 
 .icon-changyonggoupiaorenshanchu:before {
-  content: "\e645";
+  content: '\e645';
 }
 
 .icon-jianchagengxin:before {
-  content: "\e628";
+  content: '\e628';
 }
 
 .icon-shanchu:before {
-  content: "\e62d";
+  content: '\e62d';
 }
 
 .icon-fanhui:before {
-  content: "\e60f";
+  content: '\e60f';
 }
 
 .icon-gengduo:before {
-  content: "\e66c";
+  content: '\e66c';
 }
 
 .icon-lishixiao:before {
-  content: "\e8bd";
+  content: '\e8bd';
 }
 
 .icon-search:before {
-  content: "\e67d";
+  content: '\e67d';
 }
 
 .icon-time:before {
-  content: "\e680";
+  content: '\e680';
 }
-

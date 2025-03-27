@@ -111,4 +111,8 @@ async function proxyImg(url: string): Promise<string> {
     resolve(`data:image/jpeg;base64,${arrayBuffer}`)
   })
 }
-export { isPC, emptyElement, sleep, safeRunScript, checkPluginMoudle, isValidURL, getVideoMimeType, proxyImg }
+function formatStr(str: string) {
+  if (!str) return ''
+  return str.replaceAll("\n", "").replaceAll("\t", "")
+}
+export { isPC, emptyElement, sleep, safeRunScript, checkPluginMoudle, isValidURL, getVideoMimeType, proxyImg, formatStr }

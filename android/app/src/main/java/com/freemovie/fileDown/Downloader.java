@@ -125,7 +125,7 @@ public class Downloader{
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                     .thenRunAsync(() -> {
                         if(pauseFlag) return;
-                        if(downloadedSize<totalSize&&errorNum<=5){
+                        if(downloadedSize<totalSize&&errorNum==0){
                             errorNum++;
                             download();
                         }else{

@@ -38,6 +38,7 @@ customElements.define('jeep-sqlite', JeepSqlite)
 defineCustomElements(window)
 
 const app = createApp(App)
+
 app.use(VueLazyload, {
   preLoad: 0,
   error: '',
@@ -60,6 +61,9 @@ app.directive('slideIn', vSlidein)
 initAll()
   .then(router.isReady)
   .then(() => {
+    app.config.errorHandler = (err: any, vm, info) => {
+      Toast(err.message)
+    }
     app.mount('#app')
   })
   .catch(() => {

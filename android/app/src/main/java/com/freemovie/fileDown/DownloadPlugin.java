@@ -90,7 +90,7 @@ public class DownloadPlugin extends Plugin {
 
         }catch (Exception e){
             e.printStackTrace();
-            ret.put("msg",e.getMessage());
+            call.reject(e.getMessage());
         }
 
 
@@ -108,7 +108,7 @@ public class DownloadPlugin extends Plugin {
             ret.put("downloadState",gson.toJson(downloadState));
         }catch (Exception e){
             e.printStackTrace();
-            ret.put("msg",e.getMessage());
+            call.reject(e.getMessage());
         }
         call.resolve(ret);
     }
@@ -123,7 +123,7 @@ public class DownloadPlugin extends Plugin {
             downloadService.resume(downloadState,buildEmitter(downloadState));
         }catch (Exception e){
             e.printStackTrace();
-            ret.put("msg",e.getMessage());
+            call.reject(e.getMessage());
         }
 
         call.resolve(ret);

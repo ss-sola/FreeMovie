@@ -1,23 +1,13 @@
 <template>
   <IonPage>
     <IonContent>
-      <div class="page-header">
-        <IonButton fill="clear" @click="router.back()">
-          <p>返回</p>
-        </IonButton>
-        <h1>{{ folderName }}</h1>
-        <!-- <IonButton fill="clear" @click="createNewFolder">新建</IonButton> -->
-      </div>
-
-      <IonList v-if="childFolders.length > 0">
-        <IonItem
-          v-for="folder in childFolders"
-          :key="folder.id"
-          @click="navigateToFolder(folder.id, folder.name)"
-        >
-          <IonLabel>{{ folder.name }}</IonLabel>
-        </IonItem>
-      </IonList>
+      <MultiSelectList v-model:items="childFolders" :title="folderName" @delete="deleteData">
+        <template #item="{ item, isSelecting }">
+          <div class="item-solt" @click="!isSelecting && navigateToFolder(item.id, item.name)">
+            {{ item.name }}
+          </div>
+        </template>
+      </MultiSelectList>
 
       <VideoDownload v-if="hasParent" :folderId="currentFolderId" />
     </IonContent>
@@ -29,15 +19,18 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { IonPage, IonItem, IonLabel, IonContent, IonIcon, IonList, IonButton } from '@ionic/vue'
 import { getSubFolders, addFolder, getAllFolders } from '@/sqlite/folder'
+import MultiSelectList from '@/components/multi-select/MultiSelect.vue'
 import VideoDownload from '@/components/folder-list/VideoDownload.vue'
 import type { Folder, Video } from '@/types/download'
-
+import { deleteFolders } from '@/service/video'
 const route = useRoute()
 const router = useRouter()
 const currentFolderId = ref(Number(route.params.id))
 const childFolders = ref<Folder[]>([])
 // 当前文件夹名称
-const folderName = computed(() => (route.params.folderName ? route.params.folderName : '根文件夹'))
+const folderName = computed(() =>
+  route.params.folderName ? (route.params.folderName as string) : '根文件夹'
+)
 
 // 是否有父文件夹
 const hasParent = computed(() => currentFolderId.value !== 0)
@@ -49,6 +42,11 @@ const createNewFolder = async () => {
     await addFolder(name, currentFolderId.value) // 添加新文件夹
     fetchFolder() // 重新加载文件夹列表
   }
+}
+const deleteData = async (data: Folder[]) => {
+  await deleteFolders(data)
+  fetchFolder()
+  console.log(data)
 }
 
 // 加载当前文件夹数据

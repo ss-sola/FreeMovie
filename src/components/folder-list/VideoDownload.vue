@@ -1,35 +1,59 @@
 <template>
   <div class="video-download-manager">
-    <IonList>
-      <IonItem v-for="video in videos" :key="video.id" @click="toggleDownload(video.id)">
-        <IonThumbnail slot="start">
-          <img :src="video.img" alt="video thumbnail" />
-        </IonThumbnail>
-        <IonLabel>
-          <h3>{{ video.title }}</h3>
-          <IonProgressBar
-            v-if="!video.isCompleted"
-            :buffer="1"
-            :value="video.progress"
-          ></IonProgressBar>
-        </IonLabel>
-      </IonItem>
-    </IonList>
+    <MultiSelectList v-model:items="videos" :title="folderName" @delete="deleteData">
+      <template #item="{ item, isSelecting }">
+        <div class="item-solt" @click="!isSelecting && toggleDownload(item.id)">
+          <IonThumbnail slot="start">
+            <img :src="item.img" alt="video thumbnail" />
+          </IonThumbnail>
+          <div class="info-main">
+            <h5 class="title">{{ item.title }}</h5>
+            <div class="info-sub">
+              <span class="play-icon" @click.stop="nativeToPlay(item)"
+                ><i class="iconfont icon-bofang"></i>播放</span
+              >
+              <span style="color: #95afc0">{{ item.isDownloading ? '下载中' : '已暂停' }}</span>
+            </div>
+            <IonProgressBar
+              v-if="!item.isCompleted"
+              :buffer="1"
+              :value="item.progress"
+            ></IonProgressBar>
+          </div>
+        </div>
+      </template>
+    </MultiSelectList>
   </div>
 </template>
 
 <script setup lang="ts">
-import { IonItem, IonLabel, IonList, IonProgressBar, IonThumbnail, IonButton } from '@ionic/vue'
+import { IonItem, IonLabel, IonList, IonProgressBar, IonThumbnail, IonCard } from '@ionic/vue'
+import MultiSelectList from '@/components/multi-select/MultiSelect.vue'
+import { useRoute, useRouter } from 'vue-router'
 import { computed, ref, onMounted, watch } from 'vue'
 import { videos, initVideos } from '.'
-import { toggleDownload } from './action'
+import { toggleDownload, nativeToPlay } from './action'
+import type { Video } from '@/types/download'
+import { deleteVideos } from '@/service/video'
+import { Downloader } from '@/plugin/downloader'
 const props = defineProps<{
   folderId: number
 }>()
-
+const route = useRoute()
+const folderName = route.params.folderName as string
 onMounted(async () => {
   initVideos(props.folderId)
 })
+
+const deleteData = async (data: Video[]) => {
+  data.forEach(async (video) => {
+    await Downloader.pause({ id: video.id })
+  })
+
+  await deleteVideos(data)
+  initVideos(props.folderId)
+  console.log(data)
+}
 </script>
 
 <style scoped>
@@ -38,26 +62,26 @@ onMounted(async () => {
   background-color: #f8f9fa;
   border-top: 1px solid #ddd;
 }
-
-ion-list {
-  margin-top: 16px;
+img {
+  padding: 0.1em 0;
+  border-radius: 0.5em;
 }
-
-ion-thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-ion-label h3 {
-  font-size: 16px;
-  margin: 0;
-}
-
 ion-progress-bar {
-  margin-top: 8px;
+  margin-bottom: 8px;
 }
 ion-progress-bar::part(stream) {
   background-image: radial-gradient(ellipse at center, #e475f3 0%, #e475f3 30%, transparent 30%);
+}
+.title {
+  margin: 0.5em 0 0 0;
+}
+.info-main {
+  flex: 1;
+  padding-left: 0.5em;
+}
+.info-sub > span {
+  font-size: 0.7em;
+  color: #0075ff;
+  margin-right: 0.5em;
 }
 </style>

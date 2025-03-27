@@ -68,5 +68,7 @@ async function saveState(video: Video) {
   video.data = res.downloadState
   updateVideo(video)
 }
+
+
 export { Downloader, saveState };
 

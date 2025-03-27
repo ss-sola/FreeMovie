@@ -1,5 +1,4 @@
 import { CapacitorSQLite } from '@capacitor-community/sqlite'
-import { createConnection, closeConnection } from '@/sqlite/commen'
 
 const getAllEndblePlugins = async () => {
   const allPlugins = await CapacitorSQLite.query({
