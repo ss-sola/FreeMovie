@@ -22,7 +22,7 @@ async function checkVersion() {
       infoNew.content = []
     }
     if (activeVersion !== newVersion) {
-      const fVersion = localStorage.getItem('freemovie_version')
+      const fVersion = localStorage.getItem(IConfig.IVersionName)
       if (fVersion == newVersion) return
       presentAlert(infoNew)
     }

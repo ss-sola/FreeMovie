@@ -38,7 +38,7 @@ const confirm = async () => {
   const { type, value } = await Clipboard.read()
   if (value != info.infoNew.version) {
     await Clipboard.write({
-      string: info.infoNew.version
+      string: info.infoNew.url
     })
   }
   isConfirmed.value = true
