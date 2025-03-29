@@ -4,7 +4,10 @@ const config: CapacitorConfig = {
   appId: 'com.freemovie',
   appName: 'FreeMovie',
   webDir: 'dist',
-  loggingBehavior: 'none'
+  loggingBehavior: 'none',
+  server: {
+    hostname: 'app.metasola.cn',
+  }
 }
 
 export default config

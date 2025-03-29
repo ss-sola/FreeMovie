@@ -5,7 +5,7 @@ import { proxyImg } from '@/utils/static'
 import { Filesystem, Directory } from '@capacitor/filesystem';
 
 import CryptoJS from 'crypto-js'
-
+const baseDirectory = Directory.External
 export async function getIConfig() {
   return {
     /**app版本地址 */
@@ -40,9 +40,10 @@ export async function getIConfig() {
       ErrorPlay: '播放失败'
     },
     safeWindow: globalProxy,
+    baseDirectory: baseDirectory,
     basePath: (await Filesystem.getUri({
       path: "",
-      directory: Directory.Documents,
+      directory: baseDirectory,
     })).uri.substring(5)
   }
 }

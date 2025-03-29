@@ -29,7 +29,7 @@ const currentFolderId = ref(Number(route.params.id))
 const childFolders = ref<Folder[]>([])
 // 当前文件夹名称
 const folderName = computed(() =>
-  route.params.folderName ? (route.params.folderName as string) : '根文件夹'
+  route.params.folderName ? (route.params.folderName as string) : '下载目录'
 )
 
 // 是否有父文件夹

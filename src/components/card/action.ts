@@ -1,14 +1,15 @@
 import { useMovieStore } from '@/stores/movieStore'
 import { usePluginStore } from '@/stores/pluginStroe'
-import { useArtplayerStore } from '@/stores/artplayerStore'
+// import { useArtplayerStore } from '@/stores/artplayerStore'
 import { useSearchStore } from '@/stores/searchStore'
 import { doSearch } from '@/service/movie'
 import GRouter from '@/router/routes'
+import { formatStr } from '@/utils/static'
 const play = async function (item: IMovie.IMovieBase) {
   const pluginModulesMap = usePluginStore().pluginModulesMap
   //搜索
   const searchContent = useSearchStore().searchContent
-  searchContent.content = item.title
+  searchContent.content = formatStr(item.title)
   if (!location.pathname.includes('/play')) {
     doSearch()
   }
@@ -25,7 +26,7 @@ const play = async function (item: IMovie.IMovieBase) {
   try {
     resItem = await pluginModulesMap[item.pluginId].getDetailData(parm)
   } catch (error) {
-    Toast('获取线路失败')
+    Toast('获取线路失败,播放失败')
   }
 
 

@@ -3,11 +3,11 @@
     <IonContent>
       <Bubble class="aur"></Bubble>
       <div class="content">
-        <ion-item :detail="true">
+        <!-- <ion-item :detail="true">
           <ion-label>
             <h3>基础设置</h3>
           </ion-label>
-        </ion-item>
+        </ion-item> -->
         <ion-item @click="GRouter.toPluginManager()" :detail="true">
           <ion-label>
             <h3>插件管理</h3>

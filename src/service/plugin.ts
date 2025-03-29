@@ -64,13 +64,12 @@ const registPlugin = async (content: string) => {
   }
   pluginModule.enable = true
   const pluginModules = usePluginStore().pluginModules
-  pluginModules.push(pluginModule)
-
   const res = await addPlugin(plugin)
   if (res) {
     pluginModule.id = res.toString()
   }
-  await closeConnection(IConfig.Database)
+  pluginModules.push(pluginModule)
+
 }
 const updatePlugin = async (id: string, content: string) => {
   let plugin = {

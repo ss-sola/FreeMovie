@@ -8,7 +8,7 @@
           </IonThumbnail>
           <div class="info-main">
             <h5 class="title">{{ item.title }}</h5>
-            <div class="info-sub">
+            <div class="info-sub" v-if="!item.isCompleted">
               <span class="play-icon" @click.stop="nativeToPlay(item)"
                 ><i class="iconfont icon-bofang"></i>播放</span
               >

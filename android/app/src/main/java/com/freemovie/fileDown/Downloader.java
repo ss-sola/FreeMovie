@@ -82,10 +82,7 @@ public class Downloader{
         URL url = new URL(u);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         // 获取文件总大小
-        long contentLength = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            contentLength = connection.getContentLengthLong();
-        }
+        long contentLength = connection.getContentLengthLong();
 
         connection.disconnect();
         return contentLength;

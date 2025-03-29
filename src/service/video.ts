@@ -7,7 +7,7 @@ async function getVideoObjectURL(path: string) {
         if (path.endsWith('mp4')) {
             const fileUri = await Filesystem.getUri({
                 path: path,
-                directory: Directory.Documents,
+                directory: IConfig.baseDirectory,
             });
 
             // 使用 Capacitor.convertFileSrc 转换为本地资源路径
@@ -17,7 +17,7 @@ async function getVideoObjectURL(path: string) {
         // 读取文件内容为 base64
         const fileData = await Filesystem.readFile({
             path: path,
-            directory: Directory.Documents
+            directory: IConfig.baseDirectory
         })
         // 将 Base64 转换为 Blob
         const blob = base64ToBlob(fileData.data as string, 'application/vnd.apple.mpegurl')
@@ -25,12 +25,11 @@ async function getVideoObjectURL(path: string) {
         // 创建 Object URL
         const objectURL = URL.createObjectURL(blob)
 
-        console.log('m3u8 文件 URL:', objectURL)
 
         return objectURL // 可用于 video.js 播放
     } catch (error) {
         console.error('读取文件失败:', error)
-        return ''
+        throw new Error('读取文件失败')
     }
     // Base64 转 Blob 函数
     function base64ToBlob(base64: string, mimeType: string): Blob {

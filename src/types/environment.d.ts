@@ -57,6 +57,7 @@ declare namespace IEnvironment {
       ErrorPlay: string
     }
     safeWindow: Window & typeof globalThis
+    baseDirectory: Directory.External
     basePath: string
   }
   export type Toast = Promises<void>

@@ -44,6 +44,7 @@ Downloader.addListener('progress', (data) => {
   stateMap[data.url] = stateMap[data.url] || 0
 
   const progress = data.bytes / data.contentLength
+  if (data.msg) return console.log(data.msg)
 
   if (data.bytes >= data.contentLength) {
     video.progress = 1

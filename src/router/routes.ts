@@ -24,7 +24,7 @@ export class GRouter {
     router.push('/about')
   }
   toFolder() {
-    router.push('/folderList/0/根文件夹')
+    router.push('/folderList/0/下载目录')
   }
 }
 const EC = new GRouter()

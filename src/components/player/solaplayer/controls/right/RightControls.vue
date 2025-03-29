@@ -6,7 +6,7 @@
       :class="{ 'controls-visible': isShowControls() }"
     >
       <div class="control-group vertical">
-        <span><i class="iconfont icon-airplaytouping"></i></span>
+        <!-- <span><i class="iconfont icon-airplaytouping"></i></span> -->
         <span @click="toggleDrawer(true)"><i class="iconfont icon-mti-xiazai2"></i></span>
       </div>
     </div>
