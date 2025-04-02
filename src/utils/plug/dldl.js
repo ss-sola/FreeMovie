@@ -365,7 +365,8 @@ function getDocument(text) {
     return doc
 }
 const play = async function (url, option) {
-    const res = await analysis({ url: url })
+
+    const res = await analysis({ url: new URL(option.url).origin + new URL(url).pathname + new URL(url).search })
     return {
         url: res.videoUrl
     }

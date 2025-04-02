@@ -37,7 +37,7 @@ const play = async function (item: IMovie.IMovieBase) {
     resItem.playStatus = IConfig.IPlayStatus.Getting
     Object.assign(movieStore, resItem, item)
   }
-  console.log('resItem', resItem)
+  console.log('movieStore', movieStore)
 }
 
 export { play }

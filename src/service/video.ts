@@ -57,15 +57,15 @@ async function deleteVideos(videos: Video[]) {
         try {
             await Filesystem.deleteFile({
                 path: video.path,
-                directory: Directory.Documents
+                directory: IConfig.baseDirectory
             })
         } catch (error) {
-
+            console.log(error)
         }
         try {
             await Filesystem.rmdir({
                 path: video.path + `/${getFileName(video.path)}`,
-                directory: Directory.Documents,
+                directory: IConfig.baseDirectory,
                 recursive: true, // 递归删除
             });
         } catch (error) {
@@ -82,7 +82,7 @@ async function deleteFolders(folders: Folder[]) {
         try {
             await Filesystem.rmdir({
                 path: folder.name,
-                directory: Directory.Documents,
+                directory: IConfig.baseDirectory,
                 recursive: true, // 递归删除
             });
         } catch (error) {

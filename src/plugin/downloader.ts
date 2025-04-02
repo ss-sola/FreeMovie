@@ -45,6 +45,7 @@ Downloader.addListener('progress', (data) => {
 
   const progress = data.bytes / data.contentLength
   if (data.msg) return console.log(data.msg)
+  if (video.isCompleted) return
 
   if (data.bytes >= data.contentLength) {
     video.progress = 1
